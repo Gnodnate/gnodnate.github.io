@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 AUTHOR = u'Daniel Tan'
-SITENAME = u'Thint'
+SITENAME = u'Thnuth'
 SITEURL = ''
 THEME = 'themes/nest'
 
@@ -52,7 +52,7 @@ NEST_FOOTER_HTML = ''
 # index.html
 NEST_INDEX_HEAD_TITLE = u'Homepage'
 NEST_INDEX_HEADER_TITLE = u'疯人疯语'
-#NEST_INDEX_HEADER_SUBTITLE = u'疯人疯语'
+NEST_INDEX_HEADER_SUBTITLE = 'There is nothing'
 NEST_INDEX_CONTENT_TITLE = u'Last Posts'
 # archives.html
 NEST_ARCHIVES_HEAD_TITLE = u'Archives'
