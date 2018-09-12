@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
-AUTHOR = u'Daniel Tan'
+AUTHOR = u'Gondnat'
 SITENAME = u'Thnuth'
 SITEURL = ''
 THEME = 'themes/nest'
@@ -46,7 +46,7 @@ NEST_SITEMAP_ATOM_LINK = u'Atom Feed'
 NEST_SITEMAP_RSS_LINK = u'RSS Feed'
 NEST_SOCIAL_COLUMN_TITLE = u'Social'
 NEST_LINKS_COLUMN_TITLE = u'Links'
-NEST_COPYRIGHT = u'&copy; Daniel 2017'
+NEST_COPYRIGHT = u'&copy; Gondnat 2018'
 # Footer optional
 NEST_FOOTER_HTML = ''
 # index.html
