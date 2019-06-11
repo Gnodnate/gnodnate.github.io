@@ -120,3 +120,5 @@ $ go get github.com/BurntSushi/toml
 ```
 $ go mod tidy
 ```
+
+<p>{{ page.date | date_to_string }}</p>

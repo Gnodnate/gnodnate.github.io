@@ -68,3 +68,5 @@ Category: Linux
 [openSUSE:Build Service cross distribution howto](https://en.opensuse.org/openSUSE:Build_Service_cross_distribution_howto)
 
 [extract the spec file from rpm package](http://stackoverflow.com/questions/5613954/extract-the-spec-file-from-rpm-package)
+
+<p>{{ page.date | date_to_string }}</p>

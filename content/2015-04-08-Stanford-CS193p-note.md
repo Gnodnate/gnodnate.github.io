@@ -70,3 +70,4 @@ removeFromSuperView()    // this is send to the view you want to remove
 
 
 
+<p>{{ page.date | date_to_string }}</p>

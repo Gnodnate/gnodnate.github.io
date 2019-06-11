@@ -20,3 +20,4 @@ Category: Programming
 
 参考：[http://panqiincs.github.io/blog/2013/05/03/emacs-markdown-mode/](http://panqiincs.github.io/blog/2013/05/03/emacs-markdown-mode/)
 
+<p>{{ page.date | date_to_string }}</p>
