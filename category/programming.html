@@ -9,14 +9,16 @@
 
   <title>Programming Articles | Hardcode Today
 </title>
-  <link rel="canonical" href="/category/programming.html">
+  <link rel="canonical" href="https://hardcode.today/category/programming.html">
+
+  <link rel="alternate" type="application/atom+xml" href="https://hardcode.today/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="https://hardcode.today/feeds/{slug}.atom.xml" title="Categories Atom Feed">
 
 
-
-  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/theme/css/pygments/emacs.min.css">
-  <link rel="stylesheet" href="/theme/css/style.css">
+  <link rel="stylesheet" href="https://hardcode.today/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://hardcode.today/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://hardcode.today/theme/css/pygments/emacs.min.css">
+  <link rel="stylesheet" href="https://hardcode.today/theme/css/style.css">
 
 
 <meta name="description" content="A functional, clean, responsive theme for Pelican. Heavily inspired by crowsfoot and clean-blog, powered by Bootstrap.">
@@ -27,12 +29,12 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-4">
-          <a href="">
-            <img class="img-fluid" src=/theme/images/avatar.jpg width=168 height=168 alt="Hardcode Today">
+          <a href="https://hardcode.today">
+            <img class="img-fluid" src=https://hardcode.today/theme/images/avatar.jpg width=168 height=168 alt="Hardcode Today">
           </a>
         </div>
         <div class="col-sm-8">
-          <h1 class="title"><a href="">Hardcode Today</a></h1>
+          <h1 class="title"><a href="https://hardcode.today">Hardcode Today</a></h1>
           <ul class="list-inline">
             <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/gondnat" target="_blank"></a></li>
             <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/gondnat" target="_blank"></a></li>
@@ -56,12 +58,12 @@
       </li>
       <li>
         <i class="fa fa-folder-open-o"></i>
-        <a href="/category/programming.html">Programming</a>
+        <a href="https://hardcode.today/category/programming.html">Programming</a>
       </li>
     </ul>
   </header>
   <div class="col-sm-8">
-    <h4 class="title"><a href="/go-module-shi-yong.html">Go Module 使用</a></h4>
+    <h4 class="title"><a href="https://hardcode.today/go-module-shi-yong.html">Go Module 使用</a></h4>
     <div class="content">
       0.开始 本文主内容用翻译自官方博客，加上在使用过程中遇到的问题 1.介绍 Go 在1.11 和 1.12 加入了依赖管理 module。一个 module 是一个根目录有个 go.mod 文件的包（package）。 module 不依赖 $GOPATH，不需要将包放到 $GOPATH/src 目录下。 在 GO 1.11 里， 如果在工作目录或者其上级目录存在 go.mod 文件，并且不在 $GOPATH/src 目录下， module 相关命令自动打开。在 $GOPATH/src 目录下，需要设置环境变量 export …
     </div>
@@ -77,12 +79,12 @@
       </li>
       <li>
         <i class="fa fa-folder-open-o"></i>
-        <a href="/category/programming.html">Programming</a>
+        <a href="https://hardcode.today/category/programming.html">Programming</a>
       </li>
     </ul>
   </header>
   <div class="col-sm-8">
-    <h4 class="title"><a href="/dan-li-de-shi-xian.html">单例的实现</a></h4>
+    <h4 class="title"><a href="https://hardcode.today/dan-li-de-shi-xian.html">单例的实现</a></h4>
     <div class="content">
       0. 前言 最近在面试iOS，被问到单例，我当时就蒙（这个名字似曾相识，但是真的其想不起啦，背景本人Objtive-C完全是照着将Category翻译成类别的书本和Apple的官方文档学的）。后来晚上回家上网搜了搜，这不就是单一实例对象么。讲真，我用这个功能完全是我懒得一遍遍的写alloc＋init。 1.Objective-C下的实现 因为这个问题是在面试iOS被问到，所以先写Objective-C下的，也是最蛋疼的一个。看看C++有多好写就知道了。 最简单的写法： id A; @implementation ClassA + (instancetype)shareA { if (A == nil) { A = [[self alloc]init]; } return A; } @end 解释： id A是个全局变量，程序运行时候，全局变量被创建，注意这里A是个指针，我说的创建是指针变量被创建，就是存储指针的变量被创建，不是A指向的ClassA对象被创建。 这个指针是最简单的实现，只是图自己方便，不考虑被非法使用，比方说extern一下A …
     </div>
@@ -98,12 +100,12 @@
       </li>
       <li>
         <i class="fa fa-folder-open-o"></i>
-        <a href="/category/programming.html">Programming</a>
+        <a href="https://hardcode.today/category/programming.html">Programming</a>
       </li>
     </ul>
   </header>
   <div class="col-sm-8">
-    <h4 class="title"><a href="/build-c-language-library-for-android.html">Build C Language Library for Android</a></h4>
+    <h4 class="title"><a href="https://hardcode.today/build-c-language-library-for-android.html">Build C Language Library for Android</a></h4>
     <div class="content">
       0.Introduction Android apps are written in Java, Java have provide JNI(Java Native Interface) to call or be called by native applications and libraries written in other language such as C/C++ and assembly. Android provide NDK(Native Development Kit) to support native development in C/C++. 1.Installing …
     </div>
@@ -119,12 +121,12 @@
       </li>
       <li>
         <i class="fa fa-folder-open-o"></i>
-        <a href="/category/programming.html">Programming</a>
+        <a href="https://hardcode.today/category/programming.html">Programming</a>
       </li>
     </ul>
   </header>
   <div class="col-sm-8">
-    <h4 class="title"><a href="/markdown-in-emacs.html">Markdown in Emacs</a></h4>
+    <h4 class="title"><a href="https://hardcode.today/markdown-in-emacs.html">Markdown in Emacs</a></h4>
     <div class="content">
       简单的一个笔记,我在OS X下的Emacs的Markdown配置 1.下载Markdown-Model，按照网页中的介绍下载、添加启动到.emacs文件中，这里有个问题是总是提示找不到markdown-mode文件，我的解决方法是，git clone 到\~/.emacs.d下，会在.emcas.d目录下生成一个markdown-mode目录，添加\~/.emacs.d/markdown-mode到load-path。最终调用markdown-mode的配置部分如下 ;;Markdown-Mode (add-to-list 'load-path "~/.emacs.d/markdown-mode/") (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t) (add-to-list 'auto-mode-alist '("\\.markdown\\'". markdown-mode)) (add …
     </div>
@@ -137,8 +139,8 @@
     <div class="container">
       <div class="row">
        <ul class="col-sm-6 list-inline">
-          <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
-          <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+          <li class="list-inline-item"><a href="https://hardcode.today/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="https://hardcode.today/categories.html">Categories</a></li>
         </ul>
         <p class="col-sm-6 text-sm-right text-muted">
           Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
