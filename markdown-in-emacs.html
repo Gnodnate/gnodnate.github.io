@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Markdown in Emacs | Thnuth
+</title>
+  <link rel="canonical" href="/markdown-in-emacs.html">
+
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+
+<meta name="description" content="简单的一个笔记,我在OS X下的Emacs的Markdown配置 1.下载Markdown-Model，按照网页中的介绍下载、添加启动到.emacs文件中，这里有个问题是总是提示找不到markdown-mode文件，我的解决方法是，git clone 到\~/.emacs.d下，会在.emcas.d目录下生成一个markdown-mode目录，添加\~/.emacs.d/markdown-mode到load-path。最终调用markdown-mode的配置部分如下 ;;Markdown-Mode (add-to-list 'load-path "~/.emacs.d/markdown-mode/") (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t) (add-to-list 'auto-mode-alist '("\\.markdown\\'". markdown-mode)) (add …">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="">Thnuth</a></h1>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Markdown in Emacs
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2014-08-20T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Wed 20 August 2014
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="/category/programming.html">Programming</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="/author/gondnat.html">Gondnat</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>简单的一个笔记,我在OS X下的Emacs的Markdown配置</p>
+<p>1.下载<a href="http://jblevins.org/projects/markdown-mode/">Markdown-Model</a>，按照网页中的介绍下载、添加启动到.emacs文件中，这里有个问题是总是提示找不到markdown-mode文件，我的解决方法是，git clone 到\~/.emacs.d下，会在.emcas.d目录下生成一个markdown-mode目录，添加\~/.emacs.d/markdown-mode到load-path。最终调用markdown-mode的配置部分如下</p>
+<div class="highlight"><pre><span></span><span class="c1">;;Markdown-Mode</span>
+<span class="ss">(</span><span class="nv">add</span><span class="o">-</span><span class="nv">to</span><span class="o">-</span><span class="nv">list</span> <span class="s1">&#39;</span><span class="s">load-path &quot;~/.emacs.d/markdown-mode/&quot;)</span>
+<span class="ss">(</span><span class="nv">autoload</span> <span class="s1">&#39;</span><span class="s">markdown-mode &quot;markdown-mode&quot; &quot;Major mode for editing Markdown files&quot; t)</span>
+<span class="ss">(</span><span class="nv">add</span><span class="o">-</span><span class="nv">to</span><span class="o">-</span><span class="nv">list</span> <span class="s1">&#39;</span><span class="s">auto-mode-alist </span><span class="s1">&#39;</span><span class="ss">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s">.markdown</span><span class="se">\\</span><span class="s">&#39;</span><span class="s2">&quot;</span>. <span class="nv">markdown</span><span class="o">-</span><span class="nv">mode</span><span class="ss">))</span>
+<span class="ss">(</span><span class="nv">add</span><span class="o">-</span><span class="nv">to</span><span class="o">-</span><span class="nv">list</span> <span class="s1">&#39;</span><span class="s">auto-mode-alist </span><span class="s1">&#39;</span><span class="ss">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s">.md</span><span class="se">\\</span><span class="s">&#39;</span><span class="s2">&quot;</span>. <span class="nv">markdown</span><span class="o">-</span><span class="nv">mode</span><span class="ss">))</span>
+</pre></div>
+
+
+<p>2.经过上面的设置在Emacs中打开.md或是.markdown的文件，就可以有高亮显示并可以有多中快捷键使用，可参考markdown-mode的主页，也就是上面的下载页面。现在如果你使用C-c C-c p预览，或是C-c C-c m生成html，会提示没有markdown这个命令。这里使用<a href="http://brew.sh">Homebrew</a>安装pandoc，使用pandoc将Markdown转换成html。创建一个名为markdown的脚本文件，内容如下，将其拷贝到/bin或/usr/bin目录下，并赋予可执行权限。至此就可以正常使用预览功能。</p>
+<div class="highlight"><pre><span></span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="k">local</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">pandoc</span> <span class="o">-</span><span class="n">f</span> <span class="n">markdown</span> <span class="o">-</span><span class="n">t</span> <span class="n">html</span> <span class="o">-</span><span class="n">s</span> <span class="c1">--mathjax --highlight-style pygments $1</span>
+</pre></div>
+
+
+<p>参考：<a href="http://panqiincs.github.io/blog/2013/05/03/emacs-markdown-mode/">http://panqiincs.github.io/blog/2013/05/03/emacs-markdown-mode/</a></p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

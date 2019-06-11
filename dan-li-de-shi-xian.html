@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>单例的实现 | Thnuth
+</title>
+  <link rel="canonical" href="/dan-li-de-shi-xian.html">
+
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+
+<meta name="description" content="0. 前言 最近在面试iOS，被问到单例，我当时就蒙（这个名字似曾相识，但是真的其想不起啦，背景本人Objtive-C完全是照着将Category翻译成类别的书本和Apple的官方文档学的）。后来晚上回家上网搜了搜，这不就是单一实例对象么。讲真，我用这个功能完全是我懒得一遍遍的写alloc＋init。 1.Objective-C下的实现 因为这个问题是在面试iOS被问到，所以先写Objective-C下的，也是最蛋疼的一个。看看C++有多好写就知道了。 最简单的写法： id A; @implementation ClassA + (instancetype)shareA { if (A == nil) { A = [[self alloc]init]; } return A; } @end 解释： id A是个全局变量，程序运行时候，全局变量被创建，注意这里A是个指针，我说的创建是指针变量被创建，就是存储指针的变量被创建，不是A指向的ClassA对象被创建。 这个指针是最简单的实现，只是图自己方便，不考虑被非法使用，比方说extern一下A …">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="">Thnuth</a></h1>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>单例的实现
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2016-08-25T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Thu 25 August 2016
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="/category/programming.html">Programming</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="/author/gondnat.html">Gondnat</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <h2>0. 前言</h2>
+<p>最近在面试iOS，被问到单例，我当时就蒙（这个名字似曾相识，但是真的其想不起啦，背景本人Objtive-C完全是照着将Category翻译成类别的书本和Apple的官方文档学的）。后来晚上回家上网搜了搜，这不就是单一实例对象么。讲真，我用这个功能完全是我懒得一遍遍的写alloc＋init。</p>
+<h2>1.Objective-C下的实现</h2>
+<p>因为这个问题是在面试iOS被问到，所以先写Objective-C下的，也是最蛋疼的一个。看看C++有多好写就知道了。
+最简单的写法：</p>
+<div class="highlight"><pre><span></span><span class="kt">id</span> <span class="n">A</span><span class="p">;</span>
+
+<span class="k">@implementation</span> <span class="nc">ClassA</span>
+
+<span class="p">+</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">shareA</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">A</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">self</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">A</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<p>解释： id A是个全局变量，程序运行时候，全局变量被创建，注意这里A是个指针，我说的创建是指针变量被创建，就是存储指针的变量被创建，不是A指向的ClassA对象被创建。</p>
+<p>这个指针是最简单的实现，只是图自己方便，不考虑被非法使用，比方说extern一下A，还有就是多线程可能存在两个线程同时调用shareA，结果生成两份A。</p>
+<p>对于第一个extern的问题，添加static就可以限制被在其他源码文件中使用，但是请注意我这个A是在.m文件中创建的，所以你要是跑到.h声明的话，加了static，那可就是N份A了。如果你实在不太明白，请补习一下C的知识。</p>
+<p>多线程的问题，加锁就可以。So easy。</p>
+<p>在考虑到extern和多线程情况下，代码就改成这样：</p>
+<div class="highlight"><pre><span></span><span class="k">static</span> <span class="kt">id</span> <span class="n">A</span><span class="p">;</span>
+
+<span class="k">@implementation</span> <span class="nc">ClassA</span>
+
+<span class="p">+</span> <span class="p">(</span><span class="kt">instancetype</span><span class="p">)</span><span class="nf">shareA</span> <span class="p">{</span>
+    <span class="k">@synchronized</span> <span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">A</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">self</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">A</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</pre></div>
+
+
+<p>当然网上有好多把copyWithZone，allocWithZone也重写，比方说这个<a href="http://www.cocoachina.com/cms/wap.php?action=article&amp;id=16661">http://www.cocoachina.com/cms/wap.php?action=article&amp;id=16661</a>， 对于互斥锁可以参考Apple的官方文档<a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/ThreadSafety/ThreadSafety.html">https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/ThreadSafety/ThreadSafety.html</a></p>
+<h2>2.C++, Swift</h2>
+<p>昨天面试一下C++，好久没正经写过C++了，有点手生，面试官也让写个C++的单例，当时还想着Objective-C的单例，就写了下面这个</p>
+<div class="highlight"><pre><span></span><span class="nv">class</span> <span class="nv">ClassA</span><span class="c1">;</span>
+<span class="nv">static</span> <span class="nv">ClassA</span> <span class="o">*</span><span class="nv">A</span> <span class="o">=</span> <span class="nv">NULL</span><span class="c1">;</span>
+<span class="nv">class</span> <span class="nv">ClassA</span> {
+<span class="nv">public</span>:
+    <span class="nv">static</span> <span class="nv">ClassA</span><span class="o">*</span> <span class="nv">sharedA</span><span class="ss">()</span> {
+        <span class="k">if</span> <span class="ss">(</span><span class="nv">NULL</span> <span class="o">==</span> <span class="nv">A</span><span class="ss">)</span> {
+            <span class="o">*</span><span class="nv">A</span> <span class="o">=</span> <span class="nv">ClassA</span><span class="ss">()</span><span class="c1">;</span>
+        }
+        <span class="k">return</span> <span class="nv">A</span><span class="c1">;</span>
+    }
+}<span class="c1">;</span>
+</pre></div>
+
+
+<p>这个样写倒也没啥，就是你还得添加线程锁，太麻烦。后来回到家里，翻了下《C++ Primer》，看看拷贝构造函数（复制构造函数），和赋值函数（好吧，我承认我比较水，被问到这个的时候，我就没答得很好，就凭印象说了一通)。想来，Objective-C只有对象指针，C++可不是。</p>
+<div class="highlight"><pre><span></span><span class="nv">class</span> <span class="nv">ClassA</span> {
+<span class="nv">public</span>:
+    <span class="nv">static</span> <span class="nv">ClassA</span> <span class="o">&amp;</span><span class="nv">sharedA</span><span class="ss">()</span> {
+        <span class="k">return</span> <span class="nv">A</span><span class="c1">;</span>
+    }<span class="c1">;</span>
+<span class="nv">private</span>:
+    <span class="nv">static</span> <span class="nv">ClassA</span> <span class="nv">A</span><span class="c1">;</span>
+}<span class="c1">;</span>
+
+<span class="nv">ClassA</span> <span class="nv">ClassA</span>::<span class="nv">A</span> <span class="o">=</span> <span class="nv">ClassA</span><span class="ss">()</span><span class="c1">;</span>
+</pre></div>
+
+
+<p>Swift就更简单了，你要用的时候它已经安安静静的在那里等你了。</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="n">ClassA</span> {
+    <span class="n">static</span> <span class="k">let</span> <span class="n">sharedA</span> = <span class="n">ClassA</span>()
+}
+</pre></div>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

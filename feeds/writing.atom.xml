@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thnuth - Writing</title><link href="/" rel="alternate"></link><link href="/feeds/writing.atom.xml" rel="self"></link><id>/</id><updated>2014-08-28T00:00:00+08:00</updated><entry><title>Latex with Emacs on OS X</title><link href="/latex-with-emacs-on-os-x.html" rel="alternate"></link><published>2014-08-28T00:00:00+08:00</published><updated>2014-08-28T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2014-08-28:/latex-with-emacs-on-os-x.html</id><summary type="html">&lt;p&gt;记录在OS X下使用Emacs编辑LATEX&lt;/p&gt;
+&lt;h3&gt;0.安装LATEX&lt;/h3&gt;
+&lt;p&gt;Mac版的Tex可以网站&lt;a href="https://tug.org/mactex/"&gt;https://tug.org/mactex/&lt;/a&gt;获得，这里有提供一个2.4G的完整安装包，包括编辑器、预览等一整套立等可取软件套装，可以直接拿来编辑Latex。这里我们主要是用Emacs编辑Latex所以，只需要 下载基础安装包&lt;a href="https://tug.org/mactex/morepackages.html"&gt;BasicTex.pkg&lt;/a&gt;并安装。&lt;/p&gt;
+&lt;h3&gt;1.安装AUCTEX&lt;/h3&gt;
+&lt;p&gt;AUCTEX是一个提供给GNU Emacs和XEmacs使用来书写和格式化的TEX的插件，提供各种宏，包括AMS-TEX, LATEX, Texinfo, ConTEXT和docTEX&lt;a href="http://www.gnu.org/software/auctex/"&gt;(英文)&lt;/a&gt;真的不是太好翻译Orz。这里可以用源码安装，也可以使用brew安装，偷懒仍然使用brew安装。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;auctex&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;2.添加AUCTEX到Emacs配置文件中&lt;/h3&gt;
+&lt;p&gt;在用brew安装完AUCTEX，最后会友好的提示&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;To&lt;/span&gt; &lt;span class="n"&gt;activate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;following&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;your&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;emacs …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;记录在OS X下使用Emacs编辑LATEX&lt;/p&gt;
+&lt;h3&gt;0.安装LATEX&lt;/h3&gt;
+&lt;p&gt;Mac版的Tex可以网站&lt;a href="https://tug.org/mactex/"&gt;https://tug.org/mactex/&lt;/a&gt;获得，这里有提供一个2.4G的完整安装包，包括编辑器、预览等一整套立等可取软件套装，可以直接拿来编辑Latex。这里我们主要是用Emacs编辑Latex所以，只需要 下载基础安装包&lt;a href="https://tug.org/mactex/morepackages.html"&gt;BasicTex.pkg&lt;/a&gt;并安装。&lt;/p&gt;
+&lt;h3&gt;1.安装AUCTEX&lt;/h3&gt;
+&lt;p&gt;AUCTEX是一个提供给GNU Emacs和XEmacs使用来书写和格式化的TEX的插件，提供各种宏，包括AMS-TEX, LATEX, Texinfo, ConTEXT和docTEX&lt;a href="http://www.gnu.org/software/auctex/"&gt;(英文)&lt;/a&gt;真的不是太好翻译Orz。这里可以用源码安装，也可以使用brew安装，偷懒仍然使用brew安装。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;auctex&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;2.添加AUCTEX到Emacs配置文件中&lt;/h3&gt;
+&lt;p&gt;在用brew安装完AUCTEX，最后会友好的提示&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;To&lt;/span&gt; &lt;span class="n"&gt;activate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;following&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;your&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;emacs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;to&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;load-path &amp;quot;/usr/local/share/emacs/site-lisp&amp;quot;)&lt;/span&gt;
+&lt;span class="s1"&gt;  (require &amp;#39;&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;将上面的两行添加到.emacs，这是用Emacs打开或创建.tex文件，则可以在菜单栏上看到LaTex菜单，有工具栏里也有LATEX特有的Run LaTex, Run Viewer和Run BibTex三个按钮。&lt;/p&gt;
+&lt;h3&gt;3.修改Emacs中Shell的环境变量PATH&lt;/h3&gt;
+&lt;p&gt;至此可以使用Emacs编辑Tex文件，但是还有问题，编译或是预览时会提示找不到命令。这里才发现Emacs里的Shell的PATH并没有包含/usr/texbin，这里正是我们LATEX命令的目录，所以需要添加/usr/texbin到PATH中。添加如下，这里顺便添加了brew安装目录/usr/local/bin。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;;; Set $PATH&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="k"&gt;setenv&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;PATH&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+        &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;concat&lt;/span&gt;
+         &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;/usr/local/bin&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+         &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;/usr/texbin&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+         &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="k"&gt;getenv&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;PATH&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="ss"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;至此，Emacs下才是真正的编辑LATEX。&lt;/p&gt;</content></entry></feed>

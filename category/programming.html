@@ -7,9 +7,9 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Thnuth | 
+  <title>Programming Articles | Thnuth
 </title>
-  <link rel="canonical" href="/index.html">
+  <link rel="canonical" href="/category/programming.html">
 
 
 
@@ -38,7 +38,7 @@
 
   <div class="main">
     <div class="container">
-      <h1>Articles
+      <h1>Programming Articles
 </h1>
       <hr>
 <article class="row teaser">
@@ -116,102 +116,6 @@
 <article class="row teaser">
   <header class="col-sm-4 text-muted">
     <ul>
-      <li title="2015-10-29T00:00:00+08:00">
-        <i class="fa fa-clock-o"></i>
-        Thu 29 October 2015
-      </li>
-      <li>
-        <i class="fa fa-folder-open-o"></i>
-        <a href="/category/linux.html">Linux</a>
-      </li>
-      <li>
-        <i class="fa fa-user-o"></i>
-        <a href="/author/gondnat.html">Gondnat</a>      </li>
-    </ul>
-  </header>
-  <div class="col-sm-8">
-    <h4 class="title"><a href="/get-spec-from-rpm-file.html">Get Spec from RPM file</a></h4>
-    <div class="content">
-      0. 前言 常言道程序猿的成长道路就是Ctrl-C ＋ Ctrl-V (OS X用户自动切换到⌘-C + ⌘-V). Coding之路上少不了要借鉴前辈的code，这也是开源的好处之一。 1. 原因 因为要给一个Qt开发的程序打rpm包，以支持SUSE和RedHat，so 如果用户的桌面环境不是基于Qt的KDE之类的，就有可能系统中没有Qt的运行库，所以要在安装包里声明需要安装Qt的运行库, 在RPM平台上是 libQtGui.so.4, 本来以为可以像deb包写道Requires后面，像这样： Requires: libQtGui4 >= 4.8.0 但是，这样是万万不行滴，然后发现SUSE下 libQtGui.so.4 的包名是 libqt4-x11，在RedHat下这个包是qt4-x11。所以就想这个是不是要区分对待。Google下得到了这篇openSUSE:Build Service cross distribution howto，然后写成这样 %if 0%{?suse_version …
-    </div>
-  </div>
-</article>
-<hr>
-<article class="row teaser">
-  <header class="col-sm-4 text-muted">
-    <ul>
-      <li title="2015-05-30T00:00:00+08:00">
-        <i class="fa fa-clock-o"></i>
-        Sat 30 May 2015
-      </li>
-      <li>
-        <i class="fa fa-folder-open-o"></i>
-        <a href="/category/chaos.html">Chaos</a>
-      </li>
-      <li>
-        <i class="fa fa-user-o"></i>
-        <a href="/author/gondnat.html">Gondnat</a>      </li>
-    </ul>
-  </header>
-  <div class="col-sm-8">
-    <h4 class="title"><a href="/google-io-keynote-guan-hou-gan.html">Google I/O Keynote 观后感</a></h4>
-    <div class="content">
-      首先澄清，我还在看Keynote，还没看完，刚看到Android Wear，个人在使用Apple全线产品，以前用过Nexus S 和 Motorola XT910。个人更倾向于Apple的生态。所以本文大多时间都是在吐槽XD。 Android M加入权限管理 只能说终于Android用户可以不再借助第三方需求几乎所有权限的软件＋Root，来控制我的隐私。但是考虑到，在Android Lollipop正式发布半年之后，全球Android 5.0+设备寥寥无几和各家厂商的自行定制，我真的觉得这个功能到用户手里要等到猴年马月（我真的说的是猴年马月，也就是明年下半年），而且都是各家的旗舰机种。对于这个全线管理，我只能说我很想看看到时候国内开发者的反应。 Android Pay, finger print and so on 这个真的不知道最后的情况，也没有机会用到Apple家的Apple pay。但是可以预见，这个东西天朝是不能用的。 这个指纹识别，只能说是给Sony，Moto这样，用原生Android的OEM厂商减少系统定制的投入而已。 Android Wear 只能说 …
-    </div>
-  </div>
-</article>
-<hr>
-<article class="row teaser">
-  <header class="col-sm-4 text-muted">
-    <ul>
-      <li title="2015-04-08T00:00:00+08:00">
-        <i class="fa fa-clock-o"></i>
-        Wed 08 April 2015
-      </li>
-      <li>
-        <i class="fa fa-folder-open-o"></i>
-        <a href="/category/studying.html">Studying</a>
-      </li>
-      <li>
-        <i class="fa fa-user-o"></i>
-        <a href="/author/gondnat.html">Gondnat</a>      </li>
-    </ul>
-  </header>
-  <div class="col-sm-8">
-    <h4 class="title"><a href="/note-for-stanford-cs193p.html">Note for Stanford CS193p</a></h4>
-    <div class="content">
-      Class 2 What's the different between exclamation mark and question mark after the vars? they are same, but exclamation mark means the var will automatical unwrap. @IBOutlet weak var display: UILabel! @IBOutlet weak var display: UILabel? Class 3 Same way to instance array and dictionary var opStack = Array<Op>() var …
-    </div>
-  </div>
-</article>
-<hr>
-<article class="row teaser">
-  <header class="col-sm-4 text-muted">
-    <ul>
-      <li title="2014-08-28T00:00:00+08:00">
-        <i class="fa fa-clock-o"></i>
-        Thu 28 August 2014
-      </li>
-      <li>
-        <i class="fa fa-folder-open-o"></i>
-        <a href="/category/writing.html">Writing</a>
-      </li>
-      <li>
-        <i class="fa fa-user-o"></i>
-        <a href="/author/gondnat.html">Gondnat</a>      </li>
-    </ul>
-  </header>
-  <div class="col-sm-8">
-    <h4 class="title"><a href="/latex-with-emacs-on-os-x.html">Latex with Emacs on OS X</a></h4>
-    <div class="content">
-      记录在OS X下使用Emacs编辑LATEX 0.安装LATEX Mac版的Tex可以网站https://tug.org/mactex/获得，这里有提供一个2.4G的完整安装包，包括编辑器、预览等一整套立等可取软件套装，可以直接拿来编辑Latex。这里我们主要是用Emacs编辑Latex所以，只需要 下载基础安装包BasicTex.pkg并安装。 1.安装AUCTEX AUCTEX是一个提供给GNU Emacs和XEmacs使用来书写和格式化的TEX的插件，提供各种宏，包括AMS-TEX, LATEX, Texinfo, ConTEXT和docTEX(英文)真的不是太好翻译Orz。这里可以用源码安装，也可以使用brew安装，偷懒仍然使用brew安装。 brew install auctex 2.添加AUCTEX到Emacs配置文件中 在用brew安装完AUCTEX，最后会友好的提示 To activate, add the following to your .emacs …
-    </div>
-  </div>
-</article>
-<hr>
-<article class="row teaser">
-  <header class="col-sm-4 text-muted">
-    <ul>
       <li title="2014-08-20T00:00:00+08:00">
         <i class="fa fa-clock-o"></i>
         Wed 20 August 2014
@@ -229,30 +133,6 @@
     <h4 class="title"><a href="/markdown-in-emacs.html">Markdown in Emacs</a></h4>
     <div class="content">
       简单的一个笔记,我在OS X下的Emacs的Markdown配置 1.下载Markdown-Model，按照网页中的介绍下载、添加启动到.emacs文件中，这里有个问题是总是提示找不到markdown-mode文件，我的解决方法是，git clone 到\~/.emacs.d下，会在.emcas.d目录下生成一个markdown-mode目录，添加\~/.emacs.d/markdown-mode到load-path。最终调用markdown-mode的配置部分如下 ;;Markdown-Mode (add-to-list 'load-path "~/.emacs.d/markdown-mode/") (autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t) (add-to-list 'auto-mode-alist '("\\.markdown\\'". markdown-mode)) (add …
-    </div>
-  </div>
-</article>
-<hr>
-<article class="row teaser">
-  <header class="col-sm-4 text-muted">
-    <ul>
-      <li title="2014-07-02T00:00:00+08:00">
-        <i class="fa fa-clock-o"></i>
-        Wed 02 July 2014
-      </li>
-      <li>
-        <i class="fa fa-folder-open-o"></i>
-        <a href="/category/yeah.html">yeah</a>
-      </li>
-      <li>
-        <i class="fa fa-user-o"></i>
-        <a href="/author/gondnat.html">Gondnat</a>      </li>
-    </ul>
-  </header>
-  <div class="col-sm-8">
-    <h4 class="title"><a href="/hello-world.html"> Hello World. </a></h4>
-    <div class="content">
-      Hello World. Hello, world.
     </div>
   </div>
 </article>

@@ -1,5 +1,451 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Thnuth</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2014-07-02T00:00:00+08:00</updated><entry><title>Hello World.</title><link href="/hello-world.html" rel="alternate"></link><published>2014-07-02T00:00:00+08:00</published><updated>2014-07-02T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2014-07-02:/hello-world.html</id><summary type="html"> Hello World. 
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thnuth</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2019-06-11T00:00:00+08:00</updated><entry><title>Go Module 使用</title><link href="/go-module-shi-yong.html" rel="alternate"></link><published>2019-06-11T00:00:00+08:00</published><updated>2019-06-11T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2019-06-11:/go-module-shi-yong.html</id><summary type="html">&lt;h2&gt;0.开始&lt;/h2&gt;
+&lt;p&gt;本文主内容用翻译自&lt;a href="https://blog.golang.org/using-go-modules"&gt;官方博客&lt;/a&gt;，加上在使用过程中遇到的问题&lt;/p&gt;
+&lt;h2&gt;1.介绍&lt;/h2&gt;
+&lt;p&gt;Go 在1.11 和 1.12 加入了依赖管理 module。一个 module 是一个根目录有个 &lt;strong&gt;go.mod&lt;/strong&gt; 文件的包（package）。 module 不依赖 $GOPATH，不需要将包放到 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下。&lt;/p&gt;
+&lt;p&gt;在 GO 1.11 里， 如果在工作目录或者其上级目录存在 &lt;strong&gt;go.mod&lt;/strong&gt; 文件，并且不在 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下， module 相关命令自动打开。在 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下，需要设置环境变量 &lt;strong&gt;&lt;em&gt;export …&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;</summary><content type="html">&lt;h2&gt;0.开始&lt;/h2&gt;
+&lt;p&gt;本文主内容用翻译自&lt;a href="https://blog.golang.org/using-go-modules"&gt;官方博客&lt;/a&gt;，加上在使用过程中遇到的问题&lt;/p&gt;
+&lt;h2&gt;1.介绍&lt;/h2&gt;
+&lt;p&gt;Go 在1.11 和 1.12 加入了依赖管理 module。一个 module 是一个根目录有个 &lt;strong&gt;go.mod&lt;/strong&gt; 文件的包（package）。 module 不依赖 $GOPATH，不需要将包放到 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下。&lt;/p&gt;
+&lt;p&gt;在 GO 1.11 里， 如果在工作目录或者其上级目录存在 &lt;strong&gt;go.mod&lt;/strong&gt; 文件，并且不在 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下， module 相关命令自动打开。在 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下，需要设置环境变量 &lt;strong&gt;&lt;em&gt;export GO111MODULE=on&lt;/em&gt;&lt;/strong&gt;,或者在每条语句前面加上 &lt;strong&gt;GO111MODULE=on&lt;/strong&gt;，不然会遇到下面的错误：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;go&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;modules&lt;/span&gt; &lt;span class="n"&gt;disabled&lt;/span&gt; &lt;span class="n"&gt;inside&lt;/span&gt; &lt;span class="n"&gt;GOPATH&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt; &lt;span class="n"&gt;by&lt;/span&gt; &lt;span class="n"&gt;GO111MODULE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;auto&lt;/span&gt;&lt;span class="o"&gt;;&lt;/span&gt; &lt;span class="n"&gt;see&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;go help modules&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;在未来的 Go 1.13 版本中， module 会默认打开。&lt;/p&gt;
+&lt;h2&gt;2.命令&lt;/h2&gt;
+&lt;h3&gt;1.新建一个 module&lt;/h3&gt;
+&lt;p&gt;跟新建包一样，只是这次不在 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下创建。这次以我写的一个 v2ray 管理 module 为例，可以从&lt;a href="https://github.com/Gondnat/v2raymanager"&gt;这里&lt;/a&gt;找到。&lt;/p&gt;
+&lt;p&gt;目录结构如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;LICENSE&lt;/span&gt;
+&lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;README&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;md&lt;/span&gt;
+&lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;go&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mod&lt;/span&gt;
+&lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;go&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sum&lt;/span&gt;
+&lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;states&lt;/span&gt;
+&lt;span class="err"&gt;│&lt;/span&gt;   &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;states&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;go&lt;/span&gt;
+&lt;span class="err"&gt;│&lt;/span&gt;   &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;states_test&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;go&lt;/span&gt;
+&lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;usermanager&lt;/span&gt;
+    &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;go&lt;/span&gt;
+    &lt;span class="err"&gt;├──&lt;/span&gt; &lt;span class="n"&gt;remove&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;go&lt;/span&gt;
+    &lt;span class="err"&gt;└──&lt;/span&gt; &lt;span class="n"&gt;usermanager_test&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;go&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;2.生成 &lt;strong&gt;go.mod&lt;/strong&gt; 文件，添加依赖&lt;/h3&gt;
+&lt;p&gt;首先在根目录运行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ go mod init github.com/Gondnat/v2raymanager
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;生成 &lt;strong&gt;go.mod&lt;/strong&gt; 文件，此时文件里只有 module 名和 Go 版本号&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;module&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;github&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;com&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;Gondnat&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;v2raymanager&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;go&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="mf"&gt;1.12&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;分别进入 states 和 usermanager 目录，运行&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ go &lt;span class="nb"&gt;test&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;此时应该获得类似下面的输出,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ go &lt;span class="nb"&gt;test&lt;/span&gt;
+go: finding github.com/golang/protobuf/proto latest
+go: finding v2ray.com/core/testing/scenarios latest
+...
+PASS
+ok      github.com/Gondnat/v2raymanager/states  &lt;span class="m"&gt;3&lt;/span&gt;.666s
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;此时 &lt;strong&gt;go.mod&lt;/strong&gt; 内容应该已经变成如下，并且生成了 &lt;strong&gt;go.sum&lt;/strong&gt; 文件, 用来存放校验值（如果没有变化，如果是在 &lt;em&gt;$GOPATH/src&lt;/em&gt; 目录下，要设置环境变量 &lt;strong&gt;&lt;em&gt;GO111MODULE=on&lt;/em&gt;&lt;/strong&gt;，这里 go test 并不会提示错误。）。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat go.mod
+module github.com/Gondnat/v2raymanager
+
+go &lt;span class="m"&gt;1&lt;/span&gt;.12
+
+require &lt;span class="o"&gt;(&lt;/span&gt;
+    github.com/golang/protobuf v1.3.1
+    google.golang.org/grpc v1.21.1
+    v2ray.com/core v4.15.0+incompatible
+&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat go.sum 
+cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw&lt;span class="o"&gt;=&lt;/span&gt;
+github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU&lt;span class="o"&gt;=&lt;/span&gt;
+github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw&lt;span class="o"&gt;=&lt;/span&gt;
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;3.其他操作&lt;/h3&gt;
+&lt;h4&gt;显示所有依赖&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ go list -m all
+github.com/Gondnat/v2raymanager
+cloud.google.com/go v0.26.0
+github.com/BurntSushi/toml v0.3.1
+...
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;升级依赖&lt;/h4&gt;
+&lt;p&gt;比如我们想升级上面列出来的依赖 &lt;em&gt;github.com/BurntSushi/toml&lt;/em&gt;， 运行 go get：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ go get github.com/BurntSushi/toml
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;删除无用依赖&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ go mod tidy
+&lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>单例的实现</title><link href="/dan-li-de-shi-xian.html" rel="alternate"></link><published>2016-08-25T00:00:00+08:00</published><updated>2016-08-25T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2016-08-25:/dan-li-de-shi-xian.html</id><summary type="html">&lt;h2&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;最近在面试iOS，被问到单例，我当时就蒙（这个名字似曾相识，但是真的其想不起啦，背景本人Objtive-C完全是照着将Category翻译成类别的书本和Apple的官方文档学的）。后来晚上回家上网搜了搜，这不就是单一实例对象么。讲真，我用这个功能完全是我懒得一遍遍的写alloc＋init。&lt;/p&gt;
+&lt;h2&gt;1.Objective-C下的实现&lt;/h2&gt;
+&lt;p&gt;因为这个问题是在面试iOS被问到，所以先写Objective-C下的，也是最蛋疼的一个。看看C++有多好写就知道了。
+最简单的写法：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;id&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;ClassA&lt;/span&gt;
+
+&lt;span class="p"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;instancetype&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nf"&gt;shareA&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;解释： id A是个全局变量，程序运行时候，全局变量被创建，注意这里A是个指针，我说的创建是指针变量被创建，就是存储指针的变量被创建，不是A指向的ClassA对象被创建。&lt;/p&gt;
+&lt;p&gt;这个指针是最简单的实现，只是图自己方便，不考虑被非法使用，比方说extern一下A …&lt;/p&gt;</summary><content type="html">&lt;h2&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;最近在面试iOS，被问到单例，我当时就蒙（这个名字似曾相识，但是真的其想不起啦，背景本人Objtive-C完全是照着将Category翻译成类别的书本和Apple的官方文档学的）。后来晚上回家上网搜了搜，这不就是单一实例对象么。讲真，我用这个功能完全是我懒得一遍遍的写alloc＋init。&lt;/p&gt;
+&lt;h2&gt;1.Objective-C下的实现&lt;/h2&gt;
+&lt;p&gt;因为这个问题是在面试iOS被问到，所以先写Objective-C下的，也是最蛋疼的一个。看看C++有多好写就知道了。
+最简单的写法：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;id&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;ClassA&lt;/span&gt;
+
+&lt;span class="p"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;instancetype&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nf"&gt;shareA&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;解释： id A是个全局变量，程序运行时候，全局变量被创建，注意这里A是个指针，我说的创建是指针变量被创建，就是存储指针的变量被创建，不是A指向的ClassA对象被创建。&lt;/p&gt;
+&lt;p&gt;这个指针是最简单的实现，只是图自己方便，不考虑被非法使用，比方说extern一下A，还有就是多线程可能存在两个线程同时调用shareA，结果生成两份A。&lt;/p&gt;
+&lt;p&gt;对于第一个extern的问题，添加static就可以限制被在其他源码文件中使用，但是请注意我这个A是在.m文件中创建的，所以你要是跑到.h声明的话，加了static，那可就是N份A了。如果你实在不太明白，请补习一下C的知识。&lt;/p&gt;
+&lt;p&gt;多线程的问题，加锁就可以。So easy。&lt;/p&gt;
+&lt;p&gt;在考虑到extern和多线程情况下，代码就改成这样：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;static&lt;/span&gt; &lt;span class="kt"&gt;id&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;@implementation&lt;/span&gt; &lt;span class="nc"&gt;ClassA&lt;/span&gt;
+
+&lt;span class="p"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;instancetype&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="nf"&gt;shareA&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;@synchronized&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;nil&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[[&lt;/span&gt;&lt;span class="nb"&gt;self&lt;/span&gt; &lt;span class="n"&gt;alloc&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="n"&gt;init&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;@end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;当然网上有好多把copyWithZone，allocWithZone也重写，比方说这个&lt;a href="http://www.cocoachina.com/cms/wap.php?action=article&amp;amp;id=16661"&gt;http://www.cocoachina.com/cms/wap.php?action=article&amp;amp;id=16661&lt;/a&gt;， 对于互斥锁可以参考Apple的官方文档&lt;a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/ThreadSafety/ThreadSafety.html"&gt;https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/Multithreading/ThreadSafety/ThreadSafety.html&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;2.C++, Swift&lt;/h2&gt;
+&lt;p&gt;昨天面试一下C++，好久没正经写过C++了，有点手生，面试官也让写个C++的单例，当时还想着Objective-C的单例，就写了下面这个&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;class&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;static&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nv"&gt;A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;NULL&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;class&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt; {
+&lt;span class="nv"&gt;public&lt;/span&gt;:
+    &lt;span class="nv"&gt;static&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="nv"&gt;sharedA&lt;/span&gt;&lt;span class="ss"&gt;()&lt;/span&gt; {
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;NULL&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nv"&gt;A&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt; {
+            &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="nv"&gt;A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt;&lt;span class="ss"&gt;()&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
+        }
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nv"&gt;A&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
+    }
+}&lt;span class="c1"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;这个样写倒也没啥，就是你还得添加线程锁，太麻烦。后来回到家里，翻了下《C++ Primer》，看看拷贝构造函数（复制构造函数），和赋值函数（好吧，我承认我比较水，被问到这个的时候，我就没答得很好，就凭印象说了一通)。想来，Objective-C只有对象指针，C++可不是。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;class&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt; {
+&lt;span class="nv"&gt;public&lt;/span&gt;:
+    &lt;span class="nv"&gt;static&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="nv"&gt;sharedA&lt;/span&gt;&lt;span class="ss"&gt;()&lt;/span&gt; {
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nv"&gt;A&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
+    }&lt;span class="c1"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;private&lt;/span&gt;:
+    &lt;span class="nv"&gt;static&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt; &lt;span class="nv"&gt;A&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
+}&lt;span class="c1"&gt;;&lt;/span&gt;
+
+&lt;span class="nv"&gt;ClassA&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt;::&lt;span class="nv"&gt;A&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;ClassA&lt;/span&gt;&lt;span class="ss"&gt;()&lt;/span&gt;&lt;span class="c1"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Swift就更简单了，你要用的时候它已经安安静静的在那里等你了。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="n"&gt;ClassA&lt;/span&gt; {
+    &lt;span class="n"&gt;static&lt;/span&gt; &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="n"&gt;sharedA&lt;/span&gt; = &lt;span class="n"&gt;ClassA&lt;/span&gt;()
+}
+&lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>Build C Language Library for Android</title><link href="/build-c-language-library-for-android.html" rel="alternate"></link><published>2016-07-03T00:00:00+08:00</published><updated>2016-07-03T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2016-07-03:/build-c-language-library-for-android.html</id><summary type="html">&lt;h3&gt;0.Introduction&lt;/h3&gt;
+&lt;p&gt;Android apps are written in Java, Java have provide &lt;a href="http://en.wikipedia.org/wiki/Java_Native_Interface"&gt;JNI(Java Native Interface)&lt;/a&gt; to call or be called by native applications and libraries written in other language such as C/C++ and assembly. Android provide NDK(Native Development Kit) to support native development in C/C++.&lt;/p&gt;
+&lt;h3&gt;1.Installing …&lt;/h3&gt;</summary><content type="html">&lt;h3&gt;0.Introduction&lt;/h3&gt;
+&lt;p&gt;Android apps are written in Java, Java have provide &lt;a href="http://en.wikipedia.org/wiki/Java_Native_Interface"&gt;JNI(Java Native Interface)&lt;/a&gt; to call or be called by native applications and libraries written in other language such as C/C++ and assembly. Android provide NDK(Native Development Kit) to support native development in C/C++.&lt;/p&gt;
+&lt;h3&gt;1.Installing NDK&lt;/h3&gt;
+&lt;p&gt;The NDK can be download from &lt;a href="http://developer.android.com/tools/sdk/ndk/index.html"&gt;Android Developer Website&lt;/a&gt;. After downloaded, we get an archive package, unpack it to whereever you want, and replace the full path with &lt;em&gt;&lt;code&gt;&amp;lt;NDK-Path&amp;gt;&lt;/code&gt;&lt;/em&gt; in below.&lt;/p&gt;
+&lt;h3&gt;2.Use Mobile Print Project as an example&lt;/h3&gt;
+&lt;p&gt;Step 0: Read &lt;em&gt;&lt;NDK-Path&gt;/docs/OVERVIEW.html&lt;/em&gt; is helpful to understand the below steps.&lt;/p&gt;
+&lt;p&gt;Step 1: Create a project directory named "exampleProject", and a subdir named "jni", copy the C/C++ code to "jni"&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;exampleProject can be change whatever you want&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Step 2: Create a file named "Android.mk", contains is likely as follow:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;LOCAL_PATH&lt;/span&gt; :&lt;span class="o"&gt;=&lt;/span&gt; $&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="k"&gt;call&lt;/span&gt; &lt;span class="nl"&gt;my&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;dir&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;include&lt;/span&gt; $&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;CLEAR_VARS&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt;
+&lt;span class="nv"&gt;LOCAL_MODULE&lt;/span&gt; :&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;PMX_MobilePrinter&lt;/span&gt;
+&lt;span class="nv"&gt;LOCAL_SRC_FILES&lt;/span&gt; :&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;test&lt;/span&gt;.&lt;span class="nv"&gt;c&lt;/span&gt; \
+&lt;span class="nv"&gt;test1&lt;/span&gt;.&lt;span class="nv"&gt;c&lt;/span&gt;
+&lt;span class="nv"&gt;LOCAL_C_INCLUDES&lt;/span&gt; :&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;test&lt;/span&gt;.&lt;span class="nv"&gt;h&lt;/span&gt;
+&lt;span class="k"&gt;include&lt;/span&gt; $&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;BUILD_STATIC_LIBRARY&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The last line means, the output will be a static library, BUILD_SHARED_LIBRARY is for shared library.&lt;/p&gt;
+&lt;h3&gt;3.Build for different platform&lt;/h3&gt;
+&lt;p&gt;By default, the library is build for arm.Platforms are define in file "&lt;code&gt;Application.mk&lt;/code&gt;" under &lt;em&gt;jni&lt;/em&gt; directory, contains as follow:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;APP_ABI&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;all&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We need build for all platform, so the value after APP_ABI is &lt;code&gt;all&lt;/code&gt;, which can be changed to &lt;code&gt;armabi/armabi-v7a/x86/mips&lt;/code&gt;. Need to support different platform one time, just write as below, split with blank space.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;APP_ABI&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;armabi&lt;/span&gt; &lt;span class="n"&gt;armabi&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;v7a&lt;/span&gt; &lt;span class="n"&gt;x86&lt;/span&gt; &lt;span class="n"&gt;mips&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;4.Build the library&lt;/h3&gt;
+&lt;p&gt;Go to the "jni", run build command &lt;em&gt;&lt;NDK-path&gt;/ndk-build&lt;/em&gt; in Terminal(Mac/Linux)/CMD(Windows). Then you will find our library in &lt;em&gt;&lt;code&gt;exampleProject/obj/local/&amp;lt;PlatformName&amp;gt;/libPMX_MobilePrinter.a&lt;/code&gt;&lt;/em&gt;. Build shared library is placed in &lt;em&gt;&lt;code&gt;exampleProject/libs/&amp;lt;PlatformName&amp;gt;/libPMX_MobilePrinter.so&lt;/code&gt;&lt;/em&gt;.&lt;/p&gt;</content></entry><entry><title>Get Spec from RPM file</title><link href="/get-spec-from-rpm-file.html" rel="alternate"></link><published>2015-10-29T00:00:00+08:00</published><updated>2015-10-29T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2015-10-29:/get-spec-from-rpm-file.html</id><summary type="html">&lt;h2&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;常言道程序猿的成长道路就是Ctrl-C ＋ Ctrl-V (OS X用户自动切换到⌘-C + ⌘-V). Coding之路上少不了要借鉴前辈的code，这也是开源的好处之一。&lt;/p&gt;
+&lt;h2&gt;1. 原因&lt;/h2&gt;
+&lt;p&gt;因为要给一个Qt开发的程序打rpm包，以支持SUSE和RedHat，so 如果用户的桌面环境不是基于Qt的KDE之类的，就有可能系统中没有Qt的运行库，所以要在安装包里声明需要安装Qt的运行库, 在RPM平台上是 libQtGui.so.4, 本来以为可以像deb包写道Requires后面，像这样：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;libQtGui4&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mf"&gt;4.8&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;但是，这样是万万不行滴，然后发现SUSE下 libQtGui.so.4 的包名是 libqt4-x11，在RedHat下这个包是qt4-x11。所以就想这个是不是要区分对待。Google下得到了这篇&lt;a href="https://en.opensuse.org/openSUSE:Build_Service_cross_distribution_howto"&gt;openSUSE:Build Service cross distribution howto&lt;/a&gt;，然后写成这样&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%if&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="n"&gt;suse_version …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h2&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;常言道程序猿的成长道路就是Ctrl-C ＋ Ctrl-V (OS X用户自动切换到⌘-C + ⌘-V). Coding之路上少不了要借鉴前辈的code，这也是开源的好处之一。&lt;/p&gt;
+&lt;h2&gt;1. 原因&lt;/h2&gt;
+&lt;p&gt;因为要给一个Qt开发的程序打rpm包，以支持SUSE和RedHat，so 如果用户的桌面环境不是基于Qt的KDE之类的，就有可能系统中没有Qt的运行库，所以要在安装包里声明需要安装Qt的运行库, 在RPM平台上是 libQtGui.so.4, 本来以为可以像deb包写道Requires后面，像这样：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;libQtGui4&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mf"&gt;4.8&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;但是，这样是万万不行滴，然后发现SUSE下 libQtGui.so.4 的包名是 libqt4-x11，在RedHat下这个包是qt4-x11。所以就想这个是不是要区分对待。Google下得到了这篇&lt;a href="https://en.opensuse.org/openSUSE:Build_Service_cross_distribution_howto"&gt;openSUSE:Build Service cross distribution howto&lt;/a&gt;，然后写成这样&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;%if&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="o"&gt;?&lt;/span&gt;&lt;span class="n"&gt;suse_version&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="nl"&gt;Requires&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;libqt4&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x11&lt;/span&gt;
+&lt;span class="nf"&gt;%else&lt;/span&gt;
+&lt;span class="nl"&gt;Requires&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;qt4&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x11&lt;/span&gt;
+&lt;span class="nf"&gt;%endif&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;结果经过两天悲剧的发现，这个判断是在打包时进行的判断(说多了都是泪啊)。&lt;/p&gt;
+&lt;h2&gt;2. 解决&lt;/h2&gt;
+&lt;p&gt;然后想想还是看看前辈们是怎么弄的吧，解压rpm包发现，没有spec文件，然后再Google下，在&lt;a href="http://stackoverflow.com"&gt;stackoverflow&lt;/a&gt;找到了这篇&lt;a href="http://stackoverflow.com/questions/5613954/extract-the-spec-file-from-rpm-package"&gt;extract the spec file from rpm package&lt;/a&gt;
+总结下就是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;安装rpmrebuild&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;直接从rpm获取spec用这句：&lt;/p&gt;
+&lt;p&gt;rpmrebuild --package --notest-install -e [targetrpmfile]&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;获取已安装的软件的spec文件用这句：&lt;/p&gt;
+&lt;p&gt;rpmrebuild -s [outputSpecFileName].spec [softwareName]&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;获取了下Google chrome浏览器的spec如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Provides&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;google&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;chrome&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;46.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;2490.80&lt;/span&gt;
+&lt;span class="n"&gt;Provides&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;google&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;chrome&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;46.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;2490.80&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;Provides&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;google&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;chrome&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;stable&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x86&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;46.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;2490.80&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;lsb&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="mf"&gt;4.0&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libcurl&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="o"&gt;()(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libnss3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NSS_3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;14.3&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;wget&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;xdg&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;utils&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;zlib&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;ld&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x86&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;()(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;ld&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x86&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GLIBC_2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;ld&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;linux&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x86&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GLIBC_2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libasound&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;()(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libatk&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mf"&gt;1.0&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;()(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libcairo&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;()(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;()(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GLIBC_2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;11&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GLIBC_2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;2.5&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GLIBC_2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;3.2&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GLIBC_2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mf"&gt;3.4&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;      &lt;span class="n"&gt;libc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="n"&gt;GLIBC_2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="o"&gt;)(&lt;/span&gt;&lt;span class="mi"&gt;64&lt;/span&gt;&lt;span class="n"&gt;bit&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;可以看到Requires后面跟的是库的名字，写法应该是这样：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;Requires&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;libQtGui&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="na"&gt;so&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;参考链接:&lt;/h4&gt;
+&lt;p&gt;&lt;a href="https://en.opensuse.org/openSUSE:Build_Service_cross_distribution_howto"&gt;openSUSE:Build Service cross distribution howto&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://stackoverflow.com/questions/5613954/extract-the-spec-file-from-rpm-package"&gt;extract the spec file from rpm package&lt;/a&gt;&lt;/p&gt;</content></entry><entry><title>Google I/O Keynote 观后感</title><link href="/google-io-keynote-guan-hou-gan.html" rel="alternate"></link><published>2015-05-30T00:00:00+08:00</published><updated>2015-05-30T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2015-05-30:/google-io-keynote-guan-hou-gan.html</id><summary type="html">&lt;p&gt;首先澄清，我还在看Keynote，还没看完，刚看到Android Wear，个人在使用Apple全线产品，以前用过Nexus S 和 Motorola XT910。个人更倾向于Apple的生态。所以本文大多时间都是在吐槽XD。&lt;/p&gt;
+&lt;h3&gt;Android M加入权限管理&lt;/h3&gt;
+&lt;p&gt;只能说终于Android用户可以不再借助第三方需求几乎所有权限的软件＋Root，来控制我的隐私。但是考虑到，在Android Lollipop正式发布半年之后，全球Android 5.0+设备寥寥无几和各家厂商的自行定制，我真的觉得这个功能到用户手里要等到猴年马月（我真的说的是猴年马月，也就是明年下半年），而且都是各家的旗舰机种。对于这个全线管理，我只能说我很想看看到时候国内开发者的反应。&lt;/p&gt;
+&lt;h3&gt;Android Pay, finger print and so on&lt;/h3&gt;
+&lt;p&gt;这个真的不知道最后的情况，也没有机会用到Apple家的Apple pay。但是可以预见，这个东西天朝是不能用的。
+这个指纹识别，只能说是给Sony，Moto这样，用原生Android的OEM厂商减少系统定制的投入而已。&lt;/p&gt;
+&lt;h3&gt;Android Wear&lt;/h3&gt;
+&lt;p&gt;只能说 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;首先澄清，我还在看Keynote，还没看完，刚看到Android Wear，个人在使用Apple全线产品，以前用过Nexus S 和 Motorola XT910。个人更倾向于Apple的生态。所以本文大多时间都是在吐槽XD。&lt;/p&gt;
+&lt;h3&gt;Android M加入权限管理&lt;/h3&gt;
+&lt;p&gt;只能说终于Android用户可以不再借助第三方需求几乎所有权限的软件＋Root，来控制我的隐私。但是考虑到，在Android Lollipop正式发布半年之后，全球Android 5.0+设备寥寥无几和各家厂商的自行定制，我真的觉得这个功能到用户手里要等到猴年马月（我真的说的是猴年马月，也就是明年下半年），而且都是各家的旗舰机种。对于这个全线管理，我只能说我很想看看到时候国内开发者的反应。&lt;/p&gt;
+&lt;h3&gt;Android Pay, finger print and so on&lt;/h3&gt;
+&lt;p&gt;这个真的不知道最后的情况，也没有机会用到Apple家的Apple pay。但是可以预见，这个东西天朝是不能用的。
+这个指纹识别，只能说是给Sony，Moto这样，用原生Android的OEM厂商减少系统定制的投入而已。&lt;/p&gt;
+&lt;h3&gt;Android Wear&lt;/h3&gt;
+&lt;p&gt;只能说，现在一切可穿戴设备都是在耍流氓，包括Apple watch（说个段子，Apple家的主打产品都是i打头的，比方说iPhone，iPod，平庸的、可有可无的基本都是Apple打头，比方说Apple tv）。&lt;/p&gt;
+&lt;h2&gt;结语&lt;/h2&gt;
+&lt;p&gt;相对于Apple这种残酷的独裁者，Google不能强制其他厂商遵循他们的设计逻辑，结果就是Google的愿望很美好，现实很残酷。&lt;/p&gt;
+&lt;p&gt;PS: 这是笔者在用不同版本NDK编译lib，结果新版本NDK编译的lib，不能正常工作之后写下的文字，所以有失偏颇是肯定的。&lt;/p&gt;</content></entry><entry><title>Note for Stanford CS193p</title><link href="/note-for-stanford-cs193p.html" rel="alternate"></link><published>2015-04-08T00:00:00+08:00</published><updated>2015-04-08T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2015-04-08:/note-for-stanford-cs193p.html</id><summary type="html">&lt;h3&gt;Class 2&lt;/h3&gt;
+&lt;p&gt;What's the different between exclamation mark and question mark after the vars?
+they are same, but exclamation mark means the var will automatical unwrap.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;@IBOutlet&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;UILabel&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nv"&gt;@IBOutlet&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;UILabel&lt;/span&gt;&lt;span class="vm"&gt;?&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Class 3&lt;/h3&gt;
+&lt;p&gt;Same way to instance array and dictionary&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;opStack&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Op&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nf"&gt;var …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;h3&gt;Class 2&lt;/h3&gt;
+&lt;p&gt;What's the different between exclamation mark and question mark after the vars?
+they are same, but exclamation mark means the var will automatical unwrap.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;@IBOutlet&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;UILabel&lt;/span&gt;&lt;span class="err"&gt;!&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nv"&gt;@IBOutlet&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;weak&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="nl"&gt;display&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;UILabel&lt;/span&gt;&lt;span class="vm"&gt;?&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Class 3&lt;/h3&gt;
+&lt;p&gt;Same way to instance array and dictionary&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;opStack&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;Array&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Op&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;opStack&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;Op&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+
+&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;knowOps&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="k"&gt;Dictionary&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;String&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;Op&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;span class="nf"&gt;var&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="n"&gt;knowOps&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="n"&gt;String:Op&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="w"&gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;In Swift Array and Dictionary is struct, not class. When passed to argument, they are copied.
+Copied isn't copy actually, untill the value has be changed.&lt;/p&gt;
+&lt;h3&gt;Class 4&lt;/h3&gt;
+&lt;p&gt;lazy&lt;/p&gt;
+&lt;p&gt;only var can lazy initialized, let can't.&lt;/p&gt;
+&lt;p&gt;init method&lt;/p&gt;
+&lt;p&gt;There is a free init for class and struct&lt;/p&gt;
+&lt;p&gt;Designated init:&lt;/p&gt;
+&lt;p&gt;initialize all properties introduced by you class, before calling a superclass's init (different with Obj-C and C++) 
+ Convenience init:
+ Must call designated init&lt;/p&gt;
+&lt;p&gt;AnyObject&lt;/p&gt;
+&lt;p&gt;cast with &lt;font color="blue"&gt;as &lt;/font&gt;&lt;/p&gt;
+&lt;p&gt;check with &lt;font color="blue"&gt;is&lt;/font&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;var&lt;/span&gt; &lt;span class="nv"&gt;b&lt;/span&gt;: &lt;span class="nv"&gt;AnyObject&lt;/span&gt;
+&lt;span class="nv"&gt;var&lt;/span&gt; &lt;span class="nv"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;b&lt;/span&gt; &lt;span class="nv"&gt;as&lt;/span&gt;? &lt;span class="nv"&gt;UIButton&lt;/span&gt; 
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="nv"&gt;b&lt;/span&gt; &lt;span class="nv"&gt;is&lt;/span&gt; &lt;span class="nv"&gt;UIButton&lt;/span&gt; {
+
+}
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;String.Index&lt;/p&gt;
+&lt;p&gt;Unicode characters, can use Int to index a string&lt;/p&gt;
+&lt;h3&gt;Class 5&lt;/h3&gt;
+&lt;p&gt;The two method to hierarchy in code&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;addSubview&lt;/span&gt;&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;aView&lt;/span&gt;: &lt;span class="nv"&gt;UIView&lt;/span&gt;&lt;span class="ss"&gt;)&lt;/span&gt; &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="nv"&gt;sent&lt;/span&gt; &lt;span class="nv"&gt;to&lt;/span&gt; &lt;span class="nv"&gt;a&lt;/span&gt; &lt;span class="nv"&gt;aVies&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;s superview&lt;/span&gt;
+&lt;span class="nv"&gt;removeFromSuperView&lt;/span&gt;&lt;span class="ss"&gt;()&lt;/span&gt;    &lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="nv"&gt;this&lt;/span&gt; &lt;span class="nv"&gt;is&lt;/span&gt; &lt;span class="k"&gt;send&lt;/span&gt; &lt;span class="nv"&gt;to&lt;/span&gt; &lt;span class="nv"&gt;the&lt;/span&gt; &lt;span class="nv"&gt;view&lt;/span&gt; &lt;span class="nv"&gt;you&lt;/span&gt; &lt;span class="nv"&gt;want&lt;/span&gt; &lt;span class="nv"&gt;to&lt;/span&gt; &lt;span class="nv"&gt;remove&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</content></entry><entry><title>Latex with Emacs on OS X</title><link href="/latex-with-emacs-on-os-x.html" rel="alternate"></link><published>2014-08-28T00:00:00+08:00</published><updated>2014-08-28T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2014-08-28:/latex-with-emacs-on-os-x.html</id><summary type="html">&lt;p&gt;记录在OS X下使用Emacs编辑LATEX&lt;/p&gt;
+&lt;h3&gt;0.安装LATEX&lt;/h3&gt;
+&lt;p&gt;Mac版的Tex可以网站&lt;a href="https://tug.org/mactex/"&gt;https://tug.org/mactex/&lt;/a&gt;获得，这里有提供一个2.4G的完整安装包，包括编辑器、预览等一整套立等可取软件套装，可以直接拿来编辑Latex。这里我们主要是用Emacs编辑Latex所以，只需要 下载基础安装包&lt;a href="https://tug.org/mactex/morepackages.html"&gt;BasicTex.pkg&lt;/a&gt;并安装。&lt;/p&gt;
+&lt;h3&gt;1.安装AUCTEX&lt;/h3&gt;
+&lt;p&gt;AUCTEX是一个提供给GNU Emacs和XEmacs使用来书写和格式化的TEX的插件，提供各种宏，包括AMS-TEX, LATEX, Texinfo, ConTEXT和docTEX&lt;a href="http://www.gnu.org/software/auctex/"&gt;(英文)&lt;/a&gt;真的不是太好翻译Orz。这里可以用源码安装，也可以使用brew安装，偷懒仍然使用brew安装。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;auctex&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;2.添加AUCTEX到Emacs配置文件中&lt;/h3&gt;
+&lt;p&gt;在用brew安装完AUCTEX，最后会友好的提示&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;To&lt;/span&gt; &lt;span class="n"&gt;activate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;following&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;your&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;emacs …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;记录在OS X下使用Emacs编辑LATEX&lt;/p&gt;
+&lt;h3&gt;0.安装LATEX&lt;/h3&gt;
+&lt;p&gt;Mac版的Tex可以网站&lt;a href="https://tug.org/mactex/"&gt;https://tug.org/mactex/&lt;/a&gt;获得，这里有提供一个2.4G的完整安装包，包括编辑器、预览等一整套立等可取软件套装，可以直接拿来编辑Latex。这里我们主要是用Emacs编辑Latex所以，只需要 下载基础安装包&lt;a href="https://tug.org/mactex/morepackages.html"&gt;BasicTex.pkg&lt;/a&gt;并安装。&lt;/p&gt;
+&lt;h3&gt;1.安装AUCTEX&lt;/h3&gt;
+&lt;p&gt;AUCTEX是一个提供给GNU Emacs和XEmacs使用来书写和格式化的TEX的插件，提供各种宏，包括AMS-TEX, LATEX, Texinfo, ConTEXT和docTEX&lt;a href="http://www.gnu.org/software/auctex/"&gt;(英文)&lt;/a&gt;真的不是太好翻译Orz。这里可以用源码安装，也可以使用brew安装，偷懒仍然使用brew安装。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;brew&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;auctex&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;2.添加AUCTEX到Emacs配置文件中&lt;/h3&gt;
+&lt;p&gt;在用brew安装完AUCTEX，最后会友好的提示&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;To&lt;/span&gt; &lt;span class="n"&gt;activate&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;add&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;following&lt;/span&gt; &lt;span class="k"&gt;to&lt;/span&gt; &lt;span class="n"&gt;your&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;emacs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+  &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="k"&gt;to&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;load-path &amp;quot;/usr/local/share/emacs/site-lisp&amp;quot;)&lt;/span&gt;
+&lt;span class="s1"&gt;  (require &amp;#39;&lt;/span&gt;&lt;span class="n"&gt;tex&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;将上面的两行添加到.emacs，这是用Emacs打开或创建.tex文件，则可以在菜单栏上看到LaTex菜单，有工具栏里也有LATEX特有的Run LaTex, Run Viewer和Run BibTex三个按钮。&lt;/p&gt;
+&lt;h3&gt;3.修改Emacs中Shell的环境变量PATH&lt;/h3&gt;
+&lt;p&gt;至此可以使用Emacs编辑Tex文件，但是还有问题，编译或是预览时会提示找不到命令。这里才发现Emacs里的Shell的PATH并没有包含/usr/texbin，这里正是我们LATEX命令的目录，所以需要添加/usr/texbin到PATH中。添加如下，这里顺便添加了brew安装目录/usr/local/bin。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;;; Set $PATH&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="k"&gt;setenv&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;PATH&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+        &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;concat&lt;/span&gt;
+         &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;/usr/local/bin&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+         &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;/usr/texbin&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+         &lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="k"&gt;getenv&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="s"&gt;PATH&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="ss"&gt;)))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;至此，Emacs下才是真正的编辑LATEX。&lt;/p&gt;</content></entry><entry><title>Markdown in Emacs</title><link href="/markdown-in-emacs.html" rel="alternate"></link><published>2014-08-20T00:00:00+08:00</published><updated>2014-08-20T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2014-08-20:/markdown-in-emacs.html</id><summary type="html">&lt;p&gt;简单的一个笔记,我在OS X下的Emacs的Markdown配置&lt;/p&gt;
+&lt;p&gt;1.下载&lt;a href="http://jblevins.org/projects/markdown-mode/"&gt;Markdown-Model&lt;/a&gt;，按照网页中的介绍下载、添加启动到.emacs文件中，这里有个问题是总是提示找不到markdown-mode文件，我的解决方法是，git clone 到\~/.emacs.d下，会在.emcas.d目录下生成一个markdown-mode目录，添加\~/.emacs.d/markdown-mode到load-path。最终调用markdown-mode的配置部分如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;;;Markdown-Mode&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;to&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;list&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;load-path &amp;quot;~/.emacs.d/markdown-mode/&amp;quot;)&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;autoload&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;markdown-mode &amp;quot;markdown-mode&amp;quot; &amp;quot;Major mode for editing Markdown files&amp;quot; t)&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;to&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;list&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;auto-mode-alist &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s"&gt;.markdown&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;. &lt;span class="nv"&gt;markdown&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;mode&lt;/span&gt;&lt;span class="ss"&gt;))&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;add …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;简单的一个笔记,我在OS X下的Emacs的Markdown配置&lt;/p&gt;
+&lt;p&gt;1.下载&lt;a href="http://jblevins.org/projects/markdown-mode/"&gt;Markdown-Model&lt;/a&gt;，按照网页中的介绍下载、添加启动到.emacs文件中，这里有个问题是总是提示找不到markdown-mode文件，我的解决方法是，git clone 到\~/.emacs.d下，会在.emcas.d目录下生成一个markdown-mode目录，添加\~/.emacs.d/markdown-mode到load-path。最终调用markdown-mode的配置部分如下&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;;;Markdown-Mode&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;to&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;list&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;load-path &amp;quot;~/.emacs.d/markdown-mode/&amp;quot;)&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;autoload&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;markdown-mode &amp;quot;markdown-mode&amp;quot; &amp;quot;Major mode for editing Markdown files&amp;quot; t)&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;to&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;list&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;auto-mode-alist &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s"&gt;.markdown&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;. &lt;span class="nv"&gt;markdown&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;mode&lt;/span&gt;&lt;span class="ss"&gt;))&lt;/span&gt;
+&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;add&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;to&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;list&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s"&gt;auto-mode-alist &lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&lt;/span&gt;&lt;span class="ss"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s"&gt;.md&lt;/span&gt;&lt;span class="se"&gt;\\&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;. &lt;span class="nv"&gt;markdown&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="nv"&gt;mode&lt;/span&gt;&lt;span class="ss"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;2.经过上面的设置在Emacs中打开.md或是.markdown的文件，就可以有高亮显示并可以有多中快捷键使用，可参考markdown-mode的主页，也就是上面的下载页面。现在如果你使用C-c C-c p预览，或是C-c C-c m生成html，会提示没有markdown这个命令。这里使用&lt;a href="http://brew.sh"&gt;Homebrew&lt;/a&gt;安装pandoc，使用pandoc将Markdown转换成html。创建一个名为markdown的脚本文件，内容如下，将其拷贝到/bin或/usr/bin目录下，并赋予可执行权限。至此就可以正常使用预览功能。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;usr&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="k"&gt;local&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;bin&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;pandoc&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="n"&gt;markdown&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;html&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="c1"&gt;--mathjax --highlight-style pygments $1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;参考：&lt;a href="http://panqiincs.github.io/blog/2013/05/03/emacs-markdown-mode/"&gt;http://panqiincs.github.io/blog/2013/05/03/emacs-markdown-mode/&lt;/a&gt;&lt;/p&gt;</content></entry><entry><title>Hello World.</title><link href="/hello-world.html" rel="alternate"></link><published>2014-07-02T00:00:00+08:00</published><updated>2014-07-02T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2014-07-02:/hello-world.html</id><summary type="html"> Hello World. 
 
 
 

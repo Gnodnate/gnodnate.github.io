@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Go Module 使用 | Thnuth
+</title>
+  <link rel="canonical" href="/go-module-shi-yong.html">
+
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+
+<meta name="description" content="0.开始 本文主内容用翻译自官方博客，加上在使用过程中遇到的问题 1.介绍 Go 在1.11 和 1.12 加入了依赖管理 module。一个 module 是一个根目录有个 go.mod 文件的包（package）。 module 不依赖 $GOPATH，不需要将包放到 $GOPATH/src 目录下。 在 GO 1.11 里， 如果在工作目录或者其上级目录存在 go.mod 文件，并且不在 $GOPATH/src 目录下， module 相关命令自动打开。在 $GOPATH/src 目录下，需要设置环境变量 export …">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="">Thnuth</a></h1>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Go Module 使用
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2019-06-11T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Tue 11 June 2019
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="/category/programming.html">Programming</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="/author/gondnat.html">Gondnat</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <h2>0.开始</h2>
+<p>本文主内容用翻译自<a href="https://blog.golang.org/using-go-modules">官方博客</a>，加上在使用过程中遇到的问题</p>
+<h2>1.介绍</h2>
+<p>Go 在1.11 和 1.12 加入了依赖管理 module。一个 module 是一个根目录有个 <strong>go.mod</strong> 文件的包（package）。 module 不依赖 $GOPATH，不需要将包放到 <em>$GOPATH/src</em> 目录下。</p>
+<p>在 GO 1.11 里， 如果在工作目录或者其上级目录存在 <strong>go.mod</strong> 文件，并且不在 <em>$GOPATH/src</em> 目录下， module 相关命令自动打开。在 <em>$GOPATH/src</em> 目录下，需要设置环境变量 <strong><em>export GO111MODULE=on</em></strong>,或者在每条语句前面加上 <strong>GO111MODULE=on</strong>，不然会遇到下面的错误：</p>
+<div class="highlight"><pre><span></span><span class="n">go</span><span class="o">:</span> <span class="n">modules</span> <span class="n">disabled</span> <span class="n">inside</span> <span class="n">GOPATH</span><span class="o">/</span><span class="n">src</span> <span class="n">by</span> <span class="n">GO111MODULE</span><span class="o">=</span><span class="n">auto</span><span class="o">;</span> <span class="n">see</span> <span class="s1">&#39;go help modules&#39;</span>
+</pre></div>
+
+
+<p>在未来的 Go 1.13 版本中， module 会默认打开。</p>
+<h2>2.命令</h2>
+<h3>1.新建一个 module</h3>
+<p>跟新建包一样，只是这次不在 <em>$GOPATH/src</em> 目录下创建。这次以我写的一个 v2ray 管理 module 为例，可以从<a href="https://github.com/Gondnat/v2raymanager">这里</a>找到。</p>
+<p>目录结构如下：</p>
+<div class="highlight"><pre><span></span><span class="o">.</span>
+<span class="err">├──</span> <span class="n">LICENSE</span>
+<span class="err">├──</span> <span class="n">README</span><span class="o">.</span><span class="n">md</span>
+<span class="err">├──</span> <span class="n">go</span><span class="o">.</span><span class="n">mod</span>
+<span class="err">├──</span> <span class="n">go</span><span class="o">.</span><span class="n">sum</span>
+<span class="err">├──</span> <span class="n">states</span>
+<span class="err">│</span>   <span class="err">├──</span> <span class="n">states</span><span class="o">.</span><span class="n">go</span>
+<span class="err">│</span>   <span class="err">└──</span> <span class="n">states_test</span><span class="o">.</span><span class="n">go</span>
+<span class="err">└──</span> <span class="n">usermanager</span>
+    <span class="err">├──</span> <span class="n">add</span><span class="o">.</span><span class="n">go</span>
+    <span class="err">├──</span> <span class="n">remove</span><span class="o">.</span><span class="n">go</span>
+    <span class="err">└──</span> <span class="n">usermanager_test</span><span class="o">.</span><span class="n">go</span>
+</pre></div>
+
+
+<h3>2.生成 <strong>go.mod</strong> 文件，添加依赖</h3>
+<p>首先在根目录运行</p>
+<div class="highlight"><pre><span></span>$ go mod init github.com/Gondnat/v2raymanager
+</pre></div>
+
+
+<p>生成 <strong>go.mod</strong> 文件，此时文件里只有 module 名和 Go 版本号</p>
+<div class="highlight"><pre><span></span><span class="k">module</span><span class="w"> </span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">Gondnat</span><span class="o">/</span><span class="n">v2raymanager</span><span class="w"></span>
+
+<span class="k">go</span><span class="w"> </span><span class="mf">1.12</span><span class="w"></span>
+</pre></div>
+
+
+<p>分别进入 states 和 usermanager 目录，运行</p>
+<div class="highlight"><pre><span></span>$ go <span class="nb">test</span>
+</pre></div>
+
+
+<p>此时应该获得类似下面的输出,</p>
+<div class="highlight"><pre><span></span>$ go <span class="nb">test</span>
+go: finding github.com/golang/protobuf/proto latest
+go: finding v2ray.com/core/testing/scenarios latest
+...
+PASS
+ok      github.com/Gondnat/v2raymanager/states  <span class="m">3</span>.666s
+</pre></div>
+
+
+<p>此时 <strong>go.mod</strong> 内容应该已经变成如下，并且生成了 <strong>go.sum</strong> 文件, 用来存放校验值（如果没有变化，如果是在 <em>$GOPATH/src</em> 目录下，要设置环境变量 <strong><em>GO111MODULE=on</em></strong>，这里 go test 并不会提示错误。）。</p>
+<div class="highlight"><pre><span></span>$ cat go.mod
+module github.com/Gondnat/v2raymanager
+
+go <span class="m">1</span>.12
+
+require <span class="o">(</span>
+    github.com/golang/protobuf v1.3.1
+    google.golang.org/grpc v1.21.1
+    v2ray.com/core v4.15.0+incompatible
+<span class="o">)</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span></span>$ cat go.sum 
+cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw<span class="o">=</span>
+github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU<span class="o">=</span>
+github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw<span class="o">=</span>
+...
+</pre></div>
+
+
+<h3>3.其他操作</h3>
+<h4>显示所有依赖</h4>
+<div class="highlight"><pre><span></span>$ go list -m all
+github.com/Gondnat/v2raymanager
+cloud.google.com/go v0.26.0
+github.com/BurntSushi/toml v0.3.1
+...
+</pre></div>
+
+
+<h4>升级依赖</h4>
+<p>比如我们想升级上面列出来的依赖 <em>github.com/BurntSushi/toml</em>， 运行 go get：</p>
+<div class="highlight"><pre><span></span>$ go get github.com/BurntSushi/toml
+</pre></div>
+
+
+<h4>删除无用依赖</h4>
+<div class="highlight"><pre><span></span>$ go mod tidy
+</pre></div>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

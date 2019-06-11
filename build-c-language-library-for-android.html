@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Build C Language Library for Android | Thnuth
+</title>
+  <link rel="canonical" href="/build-c-language-library-for-android.html">
+
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+
+<meta name="description" content="0.Introduction Android apps are written in Java, Java have provide JNI(Java Native Interface) to call or be called by native applications and libraries written in other language such as C/C++ and assembly. Android provide NDK(Native Development Kit) to support native development in C/C++. 1.Installing …">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="">Thnuth</a></h1>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Build C Language Library for Android
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2016-07-03T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Sun 03 July 2016
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="/category/programming.html">Programming</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="/author/gondnat.html">Gondnat</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <h3>0.Introduction</h3>
+<p>Android apps are written in Java, Java have provide <a href="http://en.wikipedia.org/wiki/Java_Native_Interface">JNI(Java Native Interface)</a> to call or be called by native applications and libraries written in other language such as C/C++ and assembly. Android provide NDK(Native Development Kit) to support native development in C/C++.</p>
+<h3>1.Installing NDK</h3>
+<p>The NDK can be download from <a href="http://developer.android.com/tools/sdk/ndk/index.html">Android Developer Website</a>. After downloaded, we get an archive package, unpack it to whereever you want, and replace the full path with <em><code>&lt;NDK-Path&gt;</code></em> in below.</p>
+<h3>2.Use Mobile Print Project as an example</h3>
+<p>Step 0: Read <em><NDK-Path>/docs/OVERVIEW.html</em> is helpful to understand the below steps.</p>
+<p>Step 1: Create a project directory named "exampleProject", and a subdir named "jni", copy the C/C++ code to "jni"</p>
+<blockquote>
+<p>exampleProject can be change whatever you want</p>
+</blockquote>
+<p>Step 2: Create a file named "Android.mk", contains is likely as follow:</p>
+<div class="highlight"><pre><span></span><span class="nv">LOCAL_PATH</span> :<span class="o">=</span> $<span class="ss">(</span><span class="k">call</span> <span class="nl">my</span><span class="o">-</span><span class="nv">dir</span><span class="ss">)</span>
+<span class="k">include</span> $<span class="ss">(</span><span class="nv">CLEAR_VARS</span><span class="ss">)</span>
+<span class="nv">LOCAL_MODULE</span> :<span class="o">=</span> <span class="nv">PMX_MobilePrinter</span>
+<span class="nv">LOCAL_SRC_FILES</span> :<span class="o">=</span> <span class="nv">test</span>.<span class="nv">c</span> \
+<span class="nv">test1</span>.<span class="nv">c</span>
+<span class="nv">LOCAL_C_INCLUDES</span> :<span class="o">=</span> <span class="nv">test</span>.<span class="nv">h</span>
+<span class="k">include</span> $<span class="ss">(</span><span class="nv">BUILD_STATIC_LIBRARY</span><span class="ss">)</span>
+</pre></div>
+
+
+<p>The last line means, the output will be a static library, BUILD_SHARED_LIBRARY is for shared library.</p>
+<h3>3.Build for different platform</h3>
+<p>By default, the library is build for arm.Platforms are define in file "<code>Application.mk</code>" under <em>jni</em> directory, contains as follow:</p>
+<div class="highlight"><pre><span></span><span class="n">APP_ABI</span> <span class="p">:</span><span class="o">=</span> <span class="k">all</span>
+</pre></div>
+
+
+<p>We need build for all platform, so the value after APP_ABI is <code>all</code>, which can be changed to <code>armabi/armabi-v7a/x86/mips</code>. Need to support different platform one time, just write as below, split with blank space.</p>
+<div class="highlight"><pre><span></span><span class="n">APP_ABI</span> <span class="p">:</span><span class="o">=</span> <span class="n">armabi</span> <span class="n">armabi</span><span class="o">-</span><span class="n">v7a</span> <span class="n">x86</span> <span class="n">mips</span>
+</pre></div>
+
+
+<h3>4.Build the library</h3>
+<p>Go to the "jni", run build command <em><NDK-path>/ndk-build</em> in Terminal(Mac/Linux)/CMD(Windows). Then you will find our library in <em><code>exampleProject/obj/local/&lt;PlatformName&gt;/libPMX_MobilePrinter.a</code></em>. Build shared library is placed in <em><code>exampleProject/libs/&lt;PlatformName&gt;/libPMX_MobilePrinter.so</code></em>.</p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

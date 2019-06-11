@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Thnuth - Chaos</title><link href="/" rel="alternate"></link><link href="/feeds/chaos.atom.xml" rel="self"></link><id>/</id><updated>2015-05-30T00:00:00+08:00</updated><entry><title>Google I/O Keynote 观后感</title><link href="/google-io-keynote-guan-hou-gan.html" rel="alternate"></link><published>2015-05-30T00:00:00+08:00</published><updated>2015-05-30T00:00:00+08:00</updated><author><name>Gondnat</name></author><id>tag:None,2015-05-30:/google-io-keynote-guan-hou-gan.html</id><summary type="html">&lt;p&gt;首先澄清，我还在看Keynote，还没看完，刚看到Android Wear，个人在使用Apple全线产品，以前用过Nexus S 和 Motorola XT910。个人更倾向于Apple的生态。所以本文大多时间都是在吐槽XD。&lt;/p&gt;
+&lt;h3&gt;Android M加入权限管理&lt;/h3&gt;
+&lt;p&gt;只能说终于Android用户可以不再借助第三方需求几乎所有权限的软件＋Root，来控制我的隐私。但是考虑到，在Android Lollipop正式发布半年之后，全球Android 5.0+设备寥寥无几和各家厂商的自行定制，我真的觉得这个功能到用户手里要等到猴年马月（我真的说的是猴年马月，也就是明年下半年），而且都是各家的旗舰机种。对于这个全线管理，我只能说我很想看看到时候国内开发者的反应。&lt;/p&gt;
+&lt;h3&gt;Android Pay, finger print and so on&lt;/h3&gt;
+&lt;p&gt;这个真的不知道最后的情况，也没有机会用到Apple家的Apple pay。但是可以预见，这个东西天朝是不能用的。
+这个指纹识别，只能说是给Sony，Moto这样，用原生Android的OEM厂商减少系统定制的投入而已。&lt;/p&gt;
+&lt;h3&gt;Android Wear&lt;/h3&gt;
+&lt;p&gt;只能说 …&lt;/p&gt;</summary><content type="html">&lt;p&gt;首先澄清，我还在看Keynote，还没看完，刚看到Android Wear，个人在使用Apple全线产品，以前用过Nexus S 和 Motorola XT910。个人更倾向于Apple的生态。所以本文大多时间都是在吐槽XD。&lt;/p&gt;
+&lt;h3&gt;Android M加入权限管理&lt;/h3&gt;
+&lt;p&gt;只能说终于Android用户可以不再借助第三方需求几乎所有权限的软件＋Root，来控制我的隐私。但是考虑到，在Android Lollipop正式发布半年之后，全球Android 5.0+设备寥寥无几和各家厂商的自行定制，我真的觉得这个功能到用户手里要等到猴年马月（我真的说的是猴年马月，也就是明年下半年），而且都是各家的旗舰机种。对于这个全线管理，我只能说我很想看看到时候国内开发者的反应。&lt;/p&gt;
+&lt;h3&gt;Android Pay, finger print and so on&lt;/h3&gt;
+&lt;p&gt;这个真的不知道最后的情况，也没有机会用到Apple家的Apple pay。但是可以预见，这个东西天朝是不能用的。
+这个指纹识别，只能说是给Sony，Moto这样，用原生Android的OEM厂商减少系统定制的投入而已。&lt;/p&gt;
+&lt;h3&gt;Android Wear&lt;/h3&gt;
+&lt;p&gt;只能说，现在一切可穿戴设备都是在耍流氓，包括Apple watch（说个段子，Apple家的主打产品都是i打头的，比方说iPhone，iPod，平庸的、可有可无的基本都是Apple打头，比方说Apple tv）。&lt;/p&gt;
+&lt;h2&gt;结语&lt;/h2&gt;
+&lt;p&gt;相对于Apple这种残酷的独裁者，Google不能强制其他厂商遵循他们的设计逻辑，结果就是Google的愿望很美好，现实很残酷。&lt;/p&gt;
+&lt;p&gt;PS: 这是笔者在用不同版本NDK编译lib，结果新版本NDK编译的lib，不能正常工作之后写下的文字，所以有失偏颇是肯定的。&lt;/p&gt;</content></entry></feed>

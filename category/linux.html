@@ -7,9 +7,9 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title>Categories | Thnuth
+  <title>Linux Articles | Thnuth
 </title>
-  <link rel="canonical" href="/categories.html">
+  <link rel="canonical" href="/category/linux.html">
 
 
 
@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
   <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
   <link rel="stylesheet" href="/theme/css/style.css">
+
 
 </head>
 
@@ -37,35 +38,32 @@
 
   <div class="main">
     <div class="container">
-      <h1>Categories
+      <h1>Linux Articles
 </h1>
       <hr>
-<table class="table table-bordered table-striped table-hover">
-  <tr>
-    <td><a href="/category/chaos.html">Chaos</a></td>
-    <td>1</td>
-  </tr>
-  <tr>
-    <td><a href="/category/linux.html">Linux</a></td>
-    <td>1</td>
-  </tr>
-  <tr>
-    <td><a href="/category/programming.html">Programming</a></td>
-    <td>4</td>
-  </tr>
-  <tr>
-    <td><a href="/category/studying.html">Studying</a></td>
-    <td>1</td>
-  </tr>
-  <tr>
-    <td><a href="/category/writing.html">Writing</a></td>
-    <td>1</td>
-  </tr>
-  <tr>
-    <td><a href="/category/yeah.html">yeah</a></td>
-    <td>1</td>
-  </tr>
-</table>
+<article class="row teaser">
+  <header class="col-sm-4 text-muted">
+    <ul>
+      <li title="2015-10-29T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Thu 29 October 2015
+      </li>
+      <li>
+        <i class="fa fa-folder-open-o"></i>
+        <a href="/category/linux.html">Linux</a>
+      </li>
+      <li>
+        <i class="fa fa-user-o"></i>
+        <a href="/author/gondnat.html">Gondnat</a>      </li>
+    </ul>
+  </header>
+  <div class="col-sm-8">
+    <h4 class="title"><a href="/get-spec-from-rpm-file.html">Get Spec from RPM file</a></h4>
+    <div class="content">
+      0. 前言 常言道程序猿的成长道路就是Ctrl-C ＋ Ctrl-V (OS X用户自动切换到⌘-C + ⌘-V). Coding之路上少不了要借鉴前辈的code，这也是开源的好处之一。 1. 原因 因为要给一个Qt开发的程序打rpm包，以支持SUSE和RedHat，so 如果用户的桌面环境不是基于Qt的KDE之类的，就有可能系统中没有Qt的运行库，所以要在安装包里声明需要安装Qt的运行库, 在RPM平台上是 libQtGui.so.4, 本来以为可以像deb包写道Requires后面，像这样： Requires: libQtGui4 >= 4.8.0 但是，这样是万万不行滴，然后发现SUSE下 libQtGui.so.4 的包名是 libqt4-x11，在RedHat下这个包是qt4-x11。所以就想这个是不是要区分对待。Google下得到了这篇openSUSE:Build Service cross distribution howto，然后写成这样 %if 0%{?suse_version …
+    </div>
+  </div>
+</article>
     </div>
   </div>
 

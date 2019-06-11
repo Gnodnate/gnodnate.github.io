@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Note for Stanford CS193p | Thnuth
+</title>
+  <link rel="canonical" href="/note-for-stanford-cs193p.html">
+
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+
+<meta name="description" content="Class 2 What's the different between exclamation mark and question mark after the vars? they are same, but exclamation mark means the var will automatical unwrap. @IBOutlet weak var display: UILabel! @IBOutlet weak var display: UILabel? Class 3 Same way to instance array and dictionary var opStack = Array<Op>() var …">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="">Thnuth</a></h1>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Note for Stanford CS193p
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2015-04-08T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Wed 08 April 2015
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="/category/studying.html">Studying</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="/author/gondnat.html">Gondnat</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <h3>Class 2</h3>
+<p>What's the different between exclamation mark and question mark after the vars?
+they are same, but exclamation mark means the var will automatical unwrap.</p>
+<div class="highlight"><pre><span></span><span class="nv">@IBOutlet</span><span class="w"> </span><span class="n">weak</span><span class="w"> </span><span class="nf">var</span><span class="w"> </span><span class="nl">display</span><span class="p">:</span><span class="w"> </span><span class="n">UILabel</span><span class="err">!</span><span class="w"></span>
+<span class="nv">@IBOutlet</span><span class="w"> </span><span class="n">weak</span><span class="w"> </span><span class="nf">var</span><span class="w"> </span><span class="nl">display</span><span class="p">:</span><span class="w"> </span><span class="n">UILabel</span><span class="vm">?</span><span class="w"></span>
+</pre></div>
+
+
+<h3>Class 3</h3>
+<p>Same way to instance array and dictionary</p>
+<div class="highlight"><pre><span></span><span class="nf">var</span><span class="w"> </span><span class="n">opStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">Array</span><span class="o">&lt;</span><span class="n">Op</span><span class="o">&gt;</span><span class="p">()</span><span class="w"></span>
+<span class="nf">var</span><span class="w"> </span><span class="n">opStack</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">Op</span><span class="o">]</span><span class="p">()</span><span class="w"></span>
+
+<span class="nf">var</span><span class="w"> </span><span class="n">knowOps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">Dictionary</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Op</span><span class="o">&gt;</span><span class="p">()</span><span class="w"></span>
+<span class="nf">var</span><span class="w"> </span><span class="n">knowOps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="n">String:Op</span><span class="o">]</span><span class="p">()</span><span class="w"></span>
+</pre></div>
+
+
+<p>In Swift Array and Dictionary is struct, not class. When passed to argument, they are copied.
+Copied isn't copy actually, untill the value has be changed.</p>
+<h3>Class 4</h3>
+<p>lazy</p>
+<p>only var can lazy initialized, let can't.</p>
+<p>init method</p>
+<p>There is a free init for class and struct</p>
+<p>Designated init:</p>
+<p>initialize all properties introduced by you class, before calling a superclass's init (different with Obj-C and C++) 
+ Convenience init:
+ Must call designated init</p>
+<p>AnyObject</p>
+<p>cast with <font color="blue">as </font></p>
+<p>check with <font color="blue">is</font></p>
+<div class="highlight"><pre><span></span><span class="nv">var</span> <span class="nv">b</span>: <span class="nv">AnyObject</span>
+<span class="nv">var</span> <span class="nv">a</span> <span class="o">=</span> <span class="nv">b</span> <span class="nv">as</span>? <span class="nv">UIButton</span> 
+
+<span class="k">if</span> <span class="nv">b</span> <span class="nv">is</span> <span class="nv">UIButton</span> {
+
+}
+</pre></div>
+
+
+<p>String.Index</p>
+<p>Unicode characters, can use Int to index a string</p>
+<h3>Class 5</h3>
+<p>The two method to hierarchy in code</p>
+<div class="highlight"><pre><span></span><span class="nv">addSubview</span><span class="ss">(</span><span class="nv">aView</span>: <span class="nv">UIView</span><span class="ss">)</span> <span class="o">//</span> <span class="nv">sent</span> <span class="nv">to</span> <span class="nv">a</span> <span class="nv">aVies</span><span class="s1">&#39;</span><span class="s">s superview</span>
+<span class="nv">removeFromSuperView</span><span class="ss">()</span>    <span class="o">//</span> <span class="nv">this</span> <span class="nv">is</span> <span class="k">send</span> <span class="nv">to</span> <span class="nv">the</span> <span class="nv">view</span> <span class="nv">you</span> <span class="nv">want</span> <span class="nv">to</span> <span class="nv">remove</span>
+</pre></div>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

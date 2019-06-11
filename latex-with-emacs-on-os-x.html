@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Latex with Emacs on OS X | Thnuth
+</title>
+  <link rel="canonical" href="/latex-with-emacs-on-os-x.html">
+
+
+
+  <link rel="stylesheet" href="/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="/theme/css/style.css">
+
+
+<meta name="description" content="记录在OS X下使用Emacs编辑LATEX 0.安装LATEX Mac版的Tex可以网站https://tug.org/mactex/获得，这里有提供一个2.4G的完整安装包，包括编辑器、预览等一整套立等可取软件套装，可以直接拿来编辑Latex。这里我们主要是用Emacs编辑Latex所以，只需要 下载基础安装包BasicTex.pkg并安装。 1.安装AUCTEX AUCTEX是一个提供给GNU Emacs和XEmacs使用来书写和格式化的TEX的插件，提供各种宏，包括AMS-TEX, LATEX, Texinfo, ConTEXT和docTEX(英文)真的不是太好翻译Orz。这里可以用源码安装，也可以使用brew安装，偷懒仍然使用brew安装。 brew install auctex 2.添加AUCTEX到Emacs配置文件中 在用brew安装完AUCTEX，最后会友好的提示 To activate, add the following to your .emacs …">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="">Thnuth</a></h1>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a href="http://getpelican.com/" target="_blank">Pelican</a></li>
+            <li class="list-inline-item"><a href="http://python.org/" target="_blank">Python.org</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Latex with Emacs on OS X
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2014-08-28T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Thu 28 August 2014
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="/category/writing.html">Writing</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="/author/gondnat.html">Gondnat</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <p>记录在OS X下使用Emacs编辑LATEX</p>
+<h3>0.安装LATEX</h3>
+<p>Mac版的Tex可以网站<a href="https://tug.org/mactex/">https://tug.org/mactex/</a>获得，这里有提供一个2.4G的完整安装包，包括编辑器、预览等一整套立等可取软件套装，可以直接拿来编辑Latex。这里我们主要是用Emacs编辑Latex所以，只需要 下载基础安装包<a href="https://tug.org/mactex/morepackages.html">BasicTex.pkg</a>并安装。</p>
+<h3>1.安装AUCTEX</h3>
+<p>AUCTEX是一个提供给GNU Emacs和XEmacs使用来书写和格式化的TEX的插件，提供各种宏，包括AMS-TEX, LATEX, Texinfo, ConTEXT和docTEX<a href="http://www.gnu.org/software/auctex/">(英文)</a>真的不是太好翻译Orz。这里可以用源码安装，也可以使用brew安装，偷懒仍然使用brew安装。</p>
+<div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">install</span> <span class="n">auctex</span>
+</pre></div>
+
+
+<h3>2.添加AUCTEX到Emacs配置文件中</h3>
+<p>在用brew安装完AUCTEX，最后会友好的提示</p>
+<div class="highlight"><pre><span></span><span class="k">To</span> <span class="n">activate</span><span class="p">,</span> <span class="k">add</span> <span class="n">the</span> <span class="n">following</span> <span class="k">to</span> <span class="n">your</span> <span class="p">.</span><span class="n">emacs</span><span class="p">:</span>
+  <span class="p">(</span><span class="k">add</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="n">list</span> <span class="s1">&#39;load-path &quot;/usr/local/share/emacs/site-lisp&quot;)</span>
+<span class="s1">  (require &#39;</span><span class="n">tex</span><span class="o">-</span><span class="n">site</span><span class="p">)</span>
+</pre></div>
+
+
+<p>将上面的两行添加到.emacs，这是用Emacs打开或创建.tex文件，则可以在菜单栏上看到LaTex菜单，有工具栏里也有LATEX特有的Run LaTex, Run Viewer和Run BibTex三个按钮。</p>
+<h3>3.修改Emacs中Shell的环境变量PATH</h3>
+<p>至此可以使用Emacs编辑Tex文件，但是还有问题，编译或是预览时会提示找不到命令。这里才发现Emacs里的Shell的PATH并没有包含/usr/texbin，这里正是我们LATEX命令的目录，所以需要添加/usr/texbin到PATH中。添加如下，这里顺便添加了brew安装目录/usr/local/bin。</p>
+<div class="highlight"><pre><span></span><span class="c1">;; Set $PATH</span>
+<span class="ss">(</span><span class="k">setenv</span> <span class="s2">&quot;</span><span class="s">PATH</span><span class="s2">&quot;</span>
+        <span class="ss">(</span><span class="nv">concat</span>
+         <span class="s2">&quot;</span><span class="s">/usr/local/bin</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="s">:</span><span class="s2">&quot;</span>
+         <span class="s2">&quot;</span><span class="s">/usr/texbin</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="s">:</span><span class="s2">&quot;</span>
+         <span class="ss">(</span><span class="k">getenv</span> <span class="s2">&quot;</span><span class="s">PATH</span><span class="s2">&quot;</span><span class="ss">)))</span>
+</pre></div>
+
+
+<p>至此，Emacs下才是真正的编辑LATEX。</p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="/categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>
