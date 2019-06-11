@@ -97,4 +97,3 @@ class ClassA {
     
 ```
 
-<p>{{ page.date | date_to_string }}</p>

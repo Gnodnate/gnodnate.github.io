@@ -25,27 +25,29 @@ go: modules disabled inside GOPATH/src by GO111MODULE=auto; see 'go help modules
 跟新建包一样，只是这次不在 *$GOPATH/src* 目录下创建。这次以我写的一个 v2ray 管理 module 为例，可以从[这里](https://github.com/Gondnat/v2raymanager)找到。
 
 目录结构如下：
-```
-.
-├── LICENSE
-├── README.md
-├── go.mod
-├── go.sum
-├── states
-│   ├── states.go
-│   └── states_test.go
-└── usermanager
-    ├── add.go
-    ├── remove.go
-    └── usermanager_test.go
-```
+
+
+    :::python
+    .
+    ├── LICENSE
+    ├── README.md
+    ├── go.mod
+    ├── go.sum
+    ├── states
+    │   ├── states.go
+    │   └── states_test.go
+    └── usermanager
+        ├── add.go
+        ├── remove.go
+        └── usermanager_test.go
+
 
 ### 2.生成 **go.mod** 文件，添加依赖
 
 首先在根目录运行
 
-```
-go mod init github.com/Gondnat/v2raymanager
+```filenames
+$ go mod init github.com/Gondnat/v2raymanager
 ```
 
 生成 **go.mod** 文件，此时文件里只有 module 名和 Go 版本号
@@ -58,13 +60,13 @@ go 1.12
 
 分别进入 states 和 usermanager 目录，运行
 
-```
-go test
+```shell
+$ go test
 ```
 
 此时应该获得类似下面的输出,
 
-```
+```shell
 $ go test
 go: finding github.com/golang/protobuf/proto latest
 go: finding v2ray.com/core/testing/scenarios latest
@@ -75,7 +77,7 @@ ok  	github.com/Gondnat/v2raymanager/states	3.666s
 
 此时 **go.mod** 内容应该已经变成如下，并且生成了 **go.sum** 文件, 用来存放校验值（如果没有变化，如果是在 *$GOPATH/src* 目录下，要设置环境变量 ***GO111MODULE=on***，这里 go test 并不会提示错误。）。
 
-```
+```shell
 $ cat go.mod
 module github.com/Gondnat/v2raymanager
 
@@ -88,7 +90,7 @@ require (
 )
 ```
 
-```
+```shell
 $ cat go.sum 
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
@@ -100,7 +102,7 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 
 #### 显示所有依赖
 
-```
+```shell
 $ go list -m all
 github.com/Gondnat/v2raymanager
 cloud.google.com/go v0.26.0
@@ -111,14 +113,13 @@ github.com/BurntSushi/toml v0.3.1
 #### 升级依赖
 
 比如我们想升级上面列出来的依赖 *github.com/BurntSushi/toml*， 运行 go get：
-```
+
+```shell
 $ go get github.com/BurntSushi/toml
 ```
 
 #### 删除无用依赖
 
-```
+```shell
 $ go mod tidy
 ```
-
-<p>{{ page.date | date_to_string }}</p>

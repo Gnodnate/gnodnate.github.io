@@ -67,7 +67,3 @@ The two method to hierarchy in code
 addSubview(aView: UIView) // sent to a aVies's superview
 removeFromSuperView()    // this is send to the view you want to remove
 ```
-
-
-
-<p>{{ page.date | date_to_string }}</p>

@@ -42,4 +42,3 @@ We need build for all platform, so the value after APP_ABI is `all`, which can b
 ### 4.Build the library
 Go to the "jni", run build command *<NDK-path>/ndk-build* in Terminal(Mac/Linux)/CMD(Windows). Then you will find our library in *`exampleProject/obj/local/<PlatformName>/libPMX_MobilePrinter.a`*. Build shared library is placed in *`exampleProject/libs/<PlatformName>/libPMX_MobilePrinter.so`*.
 
-<p>{{ page.date | date_to_string }}</p>

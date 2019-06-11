@@ -69,4 +69,3 @@ Category: Linux
 
 [extract the spec file from rpm package](http://stackoverflow.com/questions/5613954/extract-the-spec-file-from-rpm-package)
 
-<p>{{ page.date | date_to_string }}</p>

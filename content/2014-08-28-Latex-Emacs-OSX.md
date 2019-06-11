@@ -42,4 +42,3 @@ To activate, add the following to your .emacs:
 
 至此，Emacs下才是真正的编辑LATEX。
 
-<p>{{ page.date | date_to_string }}</p>
