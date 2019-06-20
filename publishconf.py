@@ -19,6 +19,13 @@ CATEGORY_FEED_ATOM = 'feeds/{slug}.atom.xml'
 
 DELETE_OUTPUT_DIRECTORY = True
 
+FORCE_HTTPS = "<script type=\"text/javascript\">\
+  var targetProtocol = \"https:\";\
+  if (window.location.protocol != targetProtocol)\
+    window.location.href = targetProtocol +\
+      window.location.href.substring(window.location.protocol.length);\
+</script>"
+
 # Following items are often useful when publishing
 
 #DISQUS_SITENAME = ""
