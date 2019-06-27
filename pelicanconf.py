@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
+THEME = 'themes/alchemy'
+
 AUTHOR = 'Gondnat'
 SITENAME = 'Hardcode Today'
-
-THEME = 'themes/alchemy'
+SITESUBTITLE = 'I think, then write down✨'
+DESCRIPTION = 'A Personal Blog'
 
 PATH = 'content'
 
@@ -38,8 +40,6 @@ DEFAULT_PAGINATION = 10
 #THEME speical
 SITEIMAGE = '/theme/images/avatar.jpg width=168 height=168'
 
-DESCRIPTION = 'A functional, clean, responsive theme for Pelican. Heavily ' \
-              'inspired by crowsfoot and clean-blog, powered by Bootstrap.'
 ICONS = (
     ('twitter', 'https://twitter.com/gondnat'),
     ('github', 'https://github.com/gondnat'),
