@@ -28,6 +28,21 @@
 
 
 <meta name="description" content="0. 前言 常言道程序猿的成长道路就是Ctrl-C ＋ Ctrl-V (OS X用户自动切换到⌘-C + ⌘-V). Coding之路上少不了要借鉴前辈的code，这也是开源的好处之一。 1. 原因 因为要给一个Qt开发的程序打rpm包，以支持SUSE和RedHat，so 如果用户的桌面环境不是基于Qt的KDE之类的，就有可能系统中没有Qt的运行库，所以要在安装包里声明需要安装Qt的运行库, 在RPM平台上是 libQtGui.so.4, 本来以为可以像deb包写道Requires后面，像这样： Requires: libQtGui4 >= 4.8.0 但是，这样是万万不行滴，然后发现SUSE下 libQtGui.so.4 的包名是 libqt4-x11，在RedHat下这个包是qt4-x11。所以就想这个是不是要区分对待。Google下得到了这篇openSUSE:Build Service cross distribution howto，然后写成这样 %if 0%{?suse_version …">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-142996929-1', 'auto');
+  ga('send', 'pageview');
+</script>
 </head>
 
 <body>

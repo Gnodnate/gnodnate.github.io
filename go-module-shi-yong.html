@@ -28,6 +28,21 @@
 
 
 <meta name="description" content="0.开始 本文主内容用翻译自官方博客，加上在使用过程中遇到的问题 1.介绍 Go 在1.11 和 1.12 加入了依赖管理 module。一个 module 是一个根目录有个 go.mod 文件的包（package）。 module 不依赖 $GOPATH，不需要将包放到 $GOPATH/src 目录下。 在 GO 1.11 里， 如果在工作目录或者其上级目录存在 go.mod 文件，并且不在 $GOPATH/src 目录下， module 相关命令自动打开。在 $GOPATH/src 目录下，需要设置环境变量 export …">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-142996929-1', 'auto');
+  ga('send', 'pageview');
+</script>
 </head>
 
 <body>
