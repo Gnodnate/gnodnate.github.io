@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<script type="text/javascript">  var targetProtocol = "https:";  if (window.location.protocol != targetProtocol)    window.location.href = targetProtocol +      window.location.href.substring(window.location.protocol.length);</script>
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>macOS App 自动升级实现 | Hardcode Today
+</title>
+  <link rel="canonical" href="https://www.hardcode.today/macos-app-zi-dong-sheng-ji-shi-xian.html">
+
+  <link rel="alternate" type="application/atom+xml" href="https://www.hardcode.today/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml"
+    href="https://www.hardcode.today/feeds/{slug}.atom.xml" title="Categories Atom Feed">
+
+  <link rel="apple-touch-icon" href="https://www.hardcode.today/apple-touch-icon.png" sizes="180x180">
+  <link rel="icon" type="image/png" href="https://www.hardcode.today/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="https://www.hardcode.today/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="https://www.hardcode.today/manifest.json">
+  <meta name="theme-color" content="#333333">
+
+  <link rel="stylesheet" href="https://www.hardcode.today/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://www.hardcode.today/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://www.hardcode.today/theme/css/pygments/vs.min.css">
+  <link rel="stylesheet" href="https://www.hardcode.today/theme/css/style.css">
+
+
+<meta name="description" content="0. 序 macOS 下 AppStore 外分发的 App 升级最常用的是 Sparkle。 哪还有这边文章主要是因为，公司 Windows App 已经有一套升级服务器接口，不想再为 Mac App 单独设置一套接口，所以 Mac App这边只能自己实现自动升级了🤷🏻‍。然后就有了这边算是笔记吧。 1.开工 实现自动升级，可以分为3部分 下载更新包 用新版覆盖旧版App 运行新版App 1.1下载更新包 这个，直接调 URLSession 下载就可以，或者你也可以像我一样骚气的用 XPC 实现也可以。关于 XPC 可以点击这里 1.2 用新版覆盖旧版App 这部分，其实需要分成两部， 1.2.1 …">
+<script>
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o);
+    a.async = 1;
+    a.src = g;
+    m = s.getElementsByTagName(o)[0];
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+  ga('create', 'UA-142996929-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4">
+          <a href="https://www.hardcode.today">
+            <img class="img-fluid" src=https://www.hardcode.today/theme/images/avatar.jpg width=168 height=168 alt="Hardcode Today">
+          </a>
+        </div>
+        <div class="col-sm-8">
+          <h1 class="title"><a href="https://www.hardcode.today">Hardcode Today</a></h1>
+          <p class="text-muted">I think, then write down✨</p>
+          <ul class="list-inline">
+            <li class="list-inline-item"><a class="fa fa-twitter" href="https://twitter.com/gondnat" target="_blank"></a></li>
+            <li class="list-inline-item"><a class="fa fa-github" href="https://github.com/gondnat" target="_blank"></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>macOS App 自动升级实现
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2019-09-20T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Fri 20 September 2019
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="https://www.hardcode.today/category/programming.html">Programming</a>
+      </li>
+    </ul>
+  </header>
+  <div class="content">
+    <h1>0. 序</h1>
+<p>macOS 下 AppStore 外分发的 App 升级最常用的是 <a href="https://sparkle-project.org">Sparkle</a>。
+哪还有这边文章主要是因为，公司 Windows App 已经有一套升级服务器接口，不想再为 Mac App 单独设置一套接口，所以 Mac App这边只能自己实现自动升级了🤷🏻‍。然后就有了这边算是笔记吧。</p>
+<h1>1.开工</h1>
+<p>实现自动升级，可以分为3部分</p>
+<ol>
+<li>下载更新包</li>
+<li>用新版覆盖旧版App</li>
+<li>运行新版App</li>
+</ol>
+<h2>1.1下载更新包</h2>
+<p>这个，直接调 URLSession 下载就可以，或者你也可以像我一样骚气的用 XPC 实现也可以。关于 XPC 可以点击<a href="https://developer.apple.com/videos/play/wwdc2011/206/">这里</a></p>
+<h2>1.2 用新版覆盖旧版App</h2>
+<p>这部分，其实需要分成两部，</p>
+<h3>1.2.1 退出当前运行的旧版 App</h3>
+<p>退出旧版 App，直接调用 NSApp.terminal(nil) 就可以。</p>
+<h3>1.2.2 用新版覆盖旧版本</h3>
+<p>覆盖部分，就不能再当前进程处理了，所以这里应该要启动一个 helper 进程，在旧版本退出后，用新版覆盖旧版。</p>
+<p>这里，我是用三行 shell 实现的, 如下，先 while 循环等待当前进程退出，然后删除旧版本，拷贝新版</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> /bin/kill -0 <span class="si">${</span><span class="nv">pid</span><span class="si">}</span> &gt;<span class="p">&amp;</span>/dev/null<span class="p">;</span> <span class="k">do</span> /bin/sleep <span class="m">0</span>.1<span class="p">;</span> <span class="k">done</span><span class="p">;</span> 
+rm -fr <span class="si">${</span><span class="nv">oldVersion</span><span class="si">}</span>
+cp -r <span class="si">${</span><span class="nv">newVersion</span><span class="si">}</span> <span class="si">${</span><span class="nv">oldVersion</span><span class="si">}</span>
+</pre></div>
+
+
+<h2>1.3 运行新版App</h2>
+<p>运行新版本，这里有个问题要注意，从网络下载的 App 会被系统标记为网络下载，直接打开会有下面提示框。 </p>
+<p><img alt="Warning" src="https://www.hardcode.today/images/warning.png"></p>
+<p>在打开之前，使用下面 shell 命令先去除这个标记。</p>
+<div class="highlight"><pre><span></span>/usr/bin/xattr -d -r com.apple.quarantine <span class="si">${</span><span class="nv">appPath</span><span class="si">}</span>
+</pre></div>
+
+
+<p>然后就是直接调用 open 命令打开新版本 App 了</p>
+<div class="highlight"><pre><span></span>/usr/bin/open <span class="si">${</span><span class="nv">appPath</span><span class="si">}</span>
+</pre></div>
+
+
+<h1>2.完整实现代码</h1>
+<p>最后附上 Swift 下的完整实现代码</p>
+<div class="highlight"><pre><span></span>    <span class="kd">func</span> <span class="nf">updateToNewVersion</span><span class="p">(</span><span class="n">at</span> <span class="n">url</span><span class="p">:</span><span class="n">URL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">task</span> <span class="p">=</span> <span class="nb">Process</span><span class="p">()</span>
+        <span class="k">if</span> <span class="cp">#available</span><span class="p">(</span><span class="cp">macOS</span> <span class="mf">10.13</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">task</span><span class="p">.</span><span class="n">executableURL</span> <span class="p">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">fileURLWithPath</span><span class="p">:</span> <span class="s">&quot;/bin/sh&quot;</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">task</span><span class="p">.</span><span class="n">launchPath</span> <span class="p">=</span> <span class="s">&quot;/bin/sh&quot;</span>
+        <span class="p">}</span>
+        <span class="kd">let</span> <span class="nv">mountPoint</span> <span class="p">=</span> <span class="n">NSTemporaryDirectory</span><span class="p">().</span><span class="n">appending</span><span class="p">(</span><span class="s">&quot;</span><span class="si">\(</span><span class="n">arc4random</span><span class="si">())</span><span class="s">/&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="o">!</span><span class="n">FileManager</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">fileExists</span><span class="p">(</span><span class="n">atPath</span><span class="p">:</span> <span class="n">mountPoint</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="k">try</span> <span class="n">FileManager</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">createDirectory</span><span class="p">(</span><span class="n">atPath</span><span class="p">:</span> <span class="n">mountPoint</span><span class="p">,</span> <span class="n">withIntermediateDirectories</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+                <span class="bp">assert</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">let</span> <span class="nv">shellScript</span> <span class="p">=</span> <span class="nb">String</span><span class="p">(</span><span class="n">format</span><span class="p">:</span> <span class="s">&quot;/usr/bin/hdiutil attach %@ -nobrowse -mountpoint %@&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">replacingOccurrences</span><span class="p">(</span><span class="n">of</span><span class="p">:</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="n">with</span><span class="p">:</span> <span class="s">&quot;</span><span class="se">\\</span><span class="s"> &quot;</span><span class="p">),</span> <span class="n">mountPoint</span><span class="p">)</span>
+        <span class="n">task</span><span class="p">.</span><span class="n">arguments</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;-c&quot;</span><span class="p">,</span> <span class="n">shellScript</span><span class="p">]</span>
+        <span class="n">task</span><span class="p">.</span><span class="n">launch</span><span class="p">()</span>
+        <span class="n">task</span><span class="p">.</span><span class="n">waitUntilExit</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">task</span><span class="p">.</span><span class="n">terminationStatus</span>  <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="kd">let</span> <span class="nv">enumer</span> <span class="p">=</span> <span class="n">FileManager</span><span class="p">.</span><span class="k">default</span><span class="p">.</span><span class="n">enumerator</span><span class="p">(</span><span class="n">atPath</span><span class="p">:</span> <span class="n">mountPoint</span><span class="p">)</span>
+            <span class="k">while</span> <span class="kd">let</span> <span class="nv">fileName</span> <span class="p">=</span> <span class="n">enumer</span><span class="p">?.</span><span class="n">nextObject</span><span class="p">()</span> <span class="k">as</span><span class="p">?</span> <span class="nb">String</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="n">fileName</span><span class="p">.</span><span class="n">hasSuffix</span><span class="p">(</span><span class="s">&quot;.app&quot;</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">let</span> <span class="nv">newVersionAppPath</span> <span class="p">=</span> <span class="n">mountPoint</span><span class="p">.</span><span class="n">appending</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="kd">let</span> <span class="nv">currentRuningAppPath</span> <span class="p">=</span> <span class="n">NSRunningApplication</span><span class="p">.</span><span class="n">current</span><span class="p">.</span><span class="n">bundleURL</span><span class="p">?.</span><span class="n">path</span> <span class="p">{</span>
+                        <span class="kd">let</span> <span class="nv">pid</span> <span class="p">=</span> <span class="n">ProcessInfo</span><span class="p">.</span><span class="n">processInfo</span><span class="p">.</span><span class="n">processIdentifier</span>
+                        <span class="c1">// remove download from website flag, avoid popup warning window</span>
+                        <span class="kd">let</span> <span class="nv">removeFlag</span> <span class="p">=</span> <span class="s">&quot;/usr/bin/xattr -d -r com.apple.quarantine </span><span class="se">\&quot;</span><span class="si">\(</span><span class="n">currentRuningAppPath</span><span class="si">)</span><span class="se">\&quot;</span><span class="s">&quot;</span>
+
+                        <span class="kd">let</span> <span class="nv">script</span> <span class="p">=</span>
+                            <span class="s">&quot;while /bin/kill -0 </span><span class="si">\(</span><span class="n">pid</span><span class="si">)</span><span class="s"> &gt;&amp;/dev/null; do /bin/sleep 0.1; done; rm -fr </span><span class="se">\&quot;</span><span class="si">\(</span><span class="n">currentRuningAppPath</span><span class="si">)</span><span class="se">\&quot;</span><span class="s"> &amp;&amp; cp -r </span><span class="se">\&quot;</span><span class="si">\(</span><span class="n">newVersionAppPath</span><span class="si">)</span><span class="se">\&quot;</span><span class="s"> </span><span class="se">\&quot;</span><span class="si">\(</span><span class="n">currentRuningAppPath</span><span class="si">)</span><span class="se">\&quot;</span><span class="s"> &amp;&amp; </span><span class="si">\(</span><span class="n">removeFlag</span><span class="si">)</span><span class="s">; /usr/bin/open </span><span class="se">\&quot;</span><span class="si">\(</span><span class="n">currentRuningAppPath</span><span class="si">)</span><span class="se">\&quot;</span><span class="s">; /usr/bin/hdiutil detach </span><span class="si">\(</span><span class="n">mountPoint</span><span class="si">)</span><span class="s"> &amp;&quot;</span>
+                        <span class="kd">let</span> <span class="nv">task</span> <span class="p">=</span> <span class="nb">Process</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="cp">#available</span><span class="p">(</span><span class="cp">macOS</span> <span class="mf">10.13</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="n">task</span><span class="p">.</span><span class="n">executableURL</span> <span class="p">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">fileURLWithPath</span><span class="p">:</span> <span class="s">&quot;/bin/sh&quot;</span><span class="p">)</span>
+                        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                            <span class="n">task</span><span class="p">.</span><span class="n">launchPath</span> <span class="p">=</span> <span class="s">&quot;/bin/sh&quot;</span>
+                        <span class="p">}</span>
+                        <span class="n">task</span><span class="p">.</span><span class="n">arguments</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;-c&quot;</span><span class="p">,</span> <span class="n">script</span><span class="p">]</span>
+                        <span class="n">task</span><span class="p">.</span><span class="n">launch</span><span class="p">()</span>
+                        <span class="n">NSApp</span><span class="p">.</span><span class="n">terminate</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="nb">Process</span><span class="p">.</span><span class="n">launchedProcess</span><span class="p">(</span><span class="n">launchPath</span><span class="p">:</span> <span class="s">&quot;/usr/bin/hdiutil&quot;</span><span class="p">,</span> <span class="n">arguments</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;detach&quot;</span><span class="p">,</span> <span class="n">mountPoint</span><span class="p">])</span>
+    <span class="p">}</span>
+</pre></div>
+  </div>
+</article>
+<hr>
+<div id="disqus_thread"></div>
+<script>
+  var disqus_config = function() {
+    this.page.url = 'https://www.hardcode.today/macos-app-zi-dong-sheng-ji-shi-xian.html';
+    this.page.identifier = 'macos-app-zi-dong-sheng-ji-shi-xian';
+  };
+  (function() {
+    var d = document;
+    var s = d.createElement('script');
+    s.src = '//http-gnodnate-github-io-gnod-doc.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript class="text-muted">
+  Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="https://www.hardcode.today/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="https://www.hardcode.today/categories.html">Categories</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a
+            href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

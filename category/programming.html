@@ -74,6 +74,27 @@
 <article class="row teaser">
   <header class="col-sm-4 text-muted">
     <ul>
+      <li title="2019-09-20T00:00:00+08:00">
+        <i class="fa fa-clock-o"></i>
+        Fri 20 September 2019
+      </li>
+      <li>
+        <i class="fa fa-folder-open-o"></i>
+        <a href="https://www.hardcode.today/category/programming.html">Programming</a>
+      </li>
+    </ul>
+  </header>
+  <div class="col-sm-8">
+    <h4 class="title"><a href="https://www.hardcode.today/macos-app-zi-dong-sheng-ji-shi-xian.html">macOS App 自动升级实现</a></h4>
+    <div class="content">
+      0. 序 macOS 下 AppStore 外分发的 App 升级最常用的是 Sparkle。 哪还有这边文章主要是因为，公司 Windows App 已经有一套升级服务器接口，不想再为 Mac App 单独设置一套接口，所以 Mac App这边只能自己实现自动升级了🤷🏻‍。然后就有了这边算是笔记吧。 1.开工 实现自动升级，可以分为3部分 下载更新包 用新版覆盖旧版App 运行新版App 1.1下载更新包 这个，直接调 URLSession 下载就可以，或者你也可以像我一样骚气的用 XPC 实现也可以。关于 XPC 可以点击这里 1.2 用新版覆盖旧版App 这部分，其实需要分成两部， 1.2.1 …
+    </div>
+  </div>
+</article>
+<hr>
+<article class="row teaser">
+  <header class="col-sm-4 text-muted">
+    <ul>
       <li title="2019-06-11T00:00:00+08:00">
         <i class="fa fa-clock-o"></i>
         Tue 11 June 2019
