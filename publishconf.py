@@ -28,5 +28,7 @@ FORCE_HTTPS = "<script type=\"text/javascript\">\
 
 # Following items are often useful when publishing
 
-#DISQUS_SITENAME = ""
-#GOOGLE_ANALYTICS = ""
+DISQUS_SITENAME = "http-gnodnate-github-io-gnod-doc"
+GOOGLE_ANALYTICS = "UA-142996929-1"
+
+STATIC_PATHS = ['images']
